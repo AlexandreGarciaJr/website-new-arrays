@@ -1,0 +1,183 @@
+# New Arrays | Guia técnico
+
+HTML, CSS e JavaScript puro, sem build. A raiz do repositório é a raiz pública: basta publicá-la (GitHub Pages: branch main, pasta raiz) em qualquer hospedagem estática (Netlify, Vercel, Cloudflare Pages, Hostinger, cPanel).
+
+```
+site/
+├── index.html                    Home completa
+├── 404.html                      Página não encontrada (configure o host para servi-la no 404)
+├── politica-de-privacidade/      MINUTA, precisa de revisão jurídica antes de publicar
+├── robots.txt, sitemap.xml, site.webmanifest
+├── favicon.svg, favicon-32.png, apple-touch-icon.png, icon-192/512.png
+└── assets/
+    ├── css/site.css              Tokens do Manual NA 2026 + layout
+    ├── css/sites-incriveis.css   Motor de animação de rolagem (não editar)
+    ├── js/site.js                Formulário, LeadService, cabeçalho, vídeos
+    ├── js/sites-incriveis.js     Motor de animação de rolagem (não editar)
+    ├── fonts/inter-var-latin.woff2
+    └── img/                      Logos em SVG (branco, azul, com e sem slogan, símbolo) + imagem de compartilhamento
+```
+
+## Rodar localmente
+
+Os caminhos de CSS, JS, fontes e imagens são relativos, então funciona de três jeitos:
+
+1. **Duplo clique** em `site/index.html`: abre com visual completo. Limitação do navegador em `file://`: o link da política de privacidade abre a listagem da pasta.
+2. **Servidor local (recomendado, igual ao site publicado):** dentro da pasta `site/`, rode um destes:
+   - `npx serve .` (Node) e acesse o endereço mostrado
+   - `python -m http.server 8080` e acesse http://localhost:8080
+   - VS Code: extensão Live Server, clique direito em `index.html` > "Open with Live Server"
+3. **Com o endpoint de teste do formulário:** na pasta raiz do projeto, `node testes/server.mjs --dir . --port 4600` e acesse http://localhost:4600 (o endpoint `/api/lead` só existe nesse servidor de teste).
+
+A `404.html` usa caminhos absolutos de propósito (o host a serve em qualquer URL); ela só aparece estilizada quando publicada ou via servidor.
+
+## 1. Conectar o formulário ao backend / CRM
+
+No `<head>` do `index.html`:
+
+```js
+window.NA_CONFIG = {
+  leadEndpoint: "",          // <- URL que recebe POST JSON
+  whatsapp: "5511995572722",
+  email: "contato@newarrays.com",
+  formName: "diagnostico_hero"
+};
+```
+
+Enquanto `leadEndpoint` estiver vazio, o formulário **não simula sucesso**: mostra uma mensagem honesta e oferece o WhatsApp com as respostas já preenchidas.
+
+Sucesso = resposta HTTP 2xx do endpoint. Qualquer outra resposta, erro de rede ou tempo acima de 15 s mostra a tela de falha, preservando todas as respostas. O endpoint precisa aceitar CORS (`Access-Control-Allow-Origin` do domínio do site) e deve **validar e sanitizar no servidor** (nome, e-mail, telefone) e usar o `submission_id` para descartar duplicados.
+
+Payload enviado:
+
+```json
+{
+  "form_name": "diagnostico_hero",
+  "submission_id": "uuid",
+  "submitted_at": "2026-09-28T19:40:12.345Z",
+  "necessidades": [{ "valor": "trafego_pago", "rotulo": "Tráfego pago" }, { "valor": "site", "rotulo": "Criar ou melhorar um site" }],
+  "prioridade": { "valor": "semana_que_vem", "rotulo": "Semana que vem" },
+  "investimento": { "valor": "5000_ou_mais", "rotulo": "R$ 5.000 ou mais" },
+  "contato": { "nome": "...", "telefone": "(11) 98765-4321", "telefone_e164": "+5511987654321", "email": "..." },
+  "consentimento": { "aceito": true, "texto": "...", "politica": "https://newarrays.com/politica-de-privacidade/" },
+  "origem": { "page_path": "/", "page_url": "...", "landing_page": "...", "referrer": "...", "utm_source": "", "utm_medium": "", "utm_campaign": "", "utm_term": "", "utm_content": "", "gclid": "", "fbclid": "" }
+}
+```
+
+Valores internos (para automações): necessidades `gestao_redes_sociais | trafego_pago | site | atrair_clientes | duvida`; prioridade `hoje | semana_que_vem | mes_que_vem`; investimento `1000 | 2000 | 3000 | 4000 | 5000_ou_mais`.
+
+Proteções já no front: validação por etapa e por campo, máscara de telefone (BR e internacional com +), campo isca anti-spam, botão bloqueado durante o envio, mesma solicitação não é reenviada na mesma sessão.
+
+## 2. Analytics (GTM / GA4)
+
+O site só empurra eventos para `window.dataLayer`, **sem nome, telefone ou e-mail**. Basta instalar o GTM e criar os gatilhos:
+
+| Evento | Quando |
+|---|---|
+| `cta_click` | Clique em qualquer "Quero falar sobre meu projeto" ou CTA de serviço (`cta_position`) |
+| `form_start` | Primeira interação com o formulário |
+| `form_step` | Mudança de etapa (`step`) |
+| `form_error` | Erro de validação ou de envio (`field_group`, `error_type`) |
+| `generate_lead` | Somente após resposta 2xx do servidor (`service`, `priority`, `budget`, `source`, `medium`, `campaign`) |
+| `contact_whatsapp` / `click_email` | Cliques nos contatos |
+| `video_play` | Play em um depoimento |
+
+## 3. Publicar vídeos de clientes e bastidores
+
+Em `#resultados`, cada card tem `data-video`, `data-poster`, `data-nome`, `data-cargo`. Preencha o MP4 (H.264, vertical, até ~8 MB) e o poster (WebP 720x1280) e troque a legenda "Cliente 1" pelo nome e segmento **autorizados**. O vídeo só é baixado quando a pessoa clica em play.
+
+## 4. Adicionar prints dos projetos
+
+Em `#projetos`, dentro de cada `.projeto__img`, troque o monograma por:
+
+```html
+<img src="/assets/img/projetos/sorojet.webp" width="1200" height="750" alt="Página inicial do site da Sorojet" loading="lazy" decoding="async">
+```
+
+e remova `aria-hidden="true"` do `.projeto__img`.
+
+## 5. Logos
+
+Os SVGs em `assets/img/` foram vetorizados a partir do logo oficial contido no Manual NA 2026 (sem remontar com outra fonte). Quando os arquivos mestres da pasta "Logos + IDV" do Drive estiverem disponíveis, substitua mantendo os mesmos nomes de arquivo.
+
+## 6. Testes incluídos (`testes/`)
+
+```bash
+npm i playwright-core lighthouse axe-core
+node testes/server.mjs --dir . --port 4600      # servidor local com endpoint de teste /api/lead
+node testes/teste-form.mjs                         # 96 verificações E2E (desktop, celular, erro, teclado)
+node testes/axe.mjs                                # acessibilidade (WCAG 2.2 AA) em vários estados
+```
+
+## 7. Movimento e efeitos
+
+| Arquivo | O que faz |
+|---|---|
+| `assets/js/tinta.js` | Fumaça do Hero: simulação de fluido em WebGL (sem bibliotecas). Plumas sobem do lado direito; o cursor sopra e dispersa a fumaça, que gira e volta a preencher. A fumaça fica no Hero; na cena de abertura ela se expande, se quebra em fiapos e some (`DISPERSAO_FIM` define em que ponto da cena ela termina de sumir). Ajustes rápidos no objeto `CFG` do topo do arquivo: `SUBIDA` (velocidade das plumas), `TURBULENCIA` (quanto se espalha), `DISSIP_DENS` (quanto some), `RAIO_CURSOR`/`FORCA_CURSOR`/`RAJADA` (dispersão do cursor) e `TEMPO` (velocidade geral). |
+| `assets/js/fluxo.js` | Fluxo de campanhas interativo (seção `#fluxo`). Os caminhos e textos ficam nos objetos `NOS`, `ARESTAS` e `ROTAS`. |
+| `assets/js/movimento.js` | Hovers (botões, menu, serviços, projetos) e a coreografia de rolagem com GSAP + ScrollTrigger. |
+| `assets/js/vendor/` | GSAP 3.15 e ScrollTrigger (licença gratuita da GSAP), carregados na primeira interação (rolar, tocar, mover o mouse) ou após 7 s. Sem eles, o trilho de projetos vira rolagem lateral nativa. |
+
+Proteções de desempenho da tinta: começa depois do carregamento, resolução reduzida, pausa fora da tela ou com a aba oculta, reduz a resolução sozinha se a GPU não acompanhar e **não roda em GPU por software** (SwiftShader/llvmpipe). Por isso ela não aparece no Lighthouse/PageSpeed, que simulam sem placa de vídeo: a nota mede o site sem a tinta. Para vê-la num ambiente assim, abra com `?tinta=forcar`.
+
+Com "reduzir movimento" ativado no sistema, nada disso roda: a tinta vira um quadro parado e a página fica completa.
+
+## 8. Prints dos projetos
+
+Ficam em `assets/img/projetos/<nome>-960.webp` e `-480.webp` (16:9). Para trocar, gere as duas larguras com o mesmo nome.
+
+## 9. Cena do notebook (seção `#origem`)
+
+`assets/js/origem.js` desenha num canvas a sequência de quadros de `assets/video/notebook/` (74 WebP, 1280 px no desktop e 854 px no celular, cerca de 3 MB e 1,6 MB). A seção fica presa por cerca de 3 telas: o notebook abre, a câmera entra na tela, a tela vira caracteres e eles formam "new Arrays" (o H2 real da seção). Os quadros só carregam quando a seção se aproxima. Para trocar o vídeo, gere os quadros com os mesmos nomes (000 a 073) e ajuste `TELA` no topo do arquivo (posição da tela do notebook no último quadro, em pixels do vídeo 1920x1080).
+
+## 10. Rolagem suave
+
+`assets/js/suave.js` usa o Lenis (`assets/js/vendor/lenis.min.js`, 5 KB) para dar aceleração e desaceleração à rodinha do mouse e ao trackpad. No celular o toque continua nativo e, com "reduzir movimento", a rolagem fica sem suavização. Ajuste a sensação em `duration` (tempo da desaceleração) e `wheelMultiplier` (distância por clique). Para rolar por código, use `NA_rolar(y, suave)`.
+
+## 8. Abertura em cena presa (Hero → Pilares)
+
+`assets/js/abertura.js` + bloco "ABERTURA EM CENA PRESA" no fim do `site.css`.
+
+- **Quando roda:** desktop com mouse, tela de pelo menos 1024 × 600, sem movimento reduzido e com o formulário fechado. A decisão é feita por um script inline no `<head>` (classe `html.cena-abertura`) para não haver salto de layout. Sem essas condições, Hero e Pilares ficam um embaixo do outro.
+- **Como funciona:** `.abertura` tem 290vh de altura e o `.abertura__palco` fica preso (`position: sticky`). O progresso da rolagem (0 a 1) vira transformações em JS puro, sem GSAP: o Hero sai em camadas, os colchetes se abrem até envolver os pilares, os três títulos viajam até os pilares (FLIP) e os painéis e imagens se revelam. O mapa de tempos está no comentário do topo do arquivo.
+- **Completar a cena:** se a pessoa para no meio, a cena completa sozinha na direção em que ela rolava (`CENA.SNAP_ESPERA`, `CENA.SNAP_LIMIAR`). Para testes: `window.NA_cenaSemSnap = true`.
+- **Altura da cena:** `.cena-abertura .abertura { height: 290vh }`. Mais alto = transição mais lenta.
+
+### Imagens dos pilares (provisórias)
+
+Na seção `#pilares`, cada `<span class="pilar__midia-item pilar__slot" data-slot="...">` é um espaço reservado (borda tracejada de propósito). Para trocar, substitua o `<span>` por:
+
+```html
+<img class="pilar__midia-item" src="assets/img/pilares/reels-1.webp" width="540" height="960" alt="Descrição real da imagem" loading="lazy" decoding="async" style="object-fit: cover">
+```
+
+Proporções: Reels 9:16, post 4:5, prints de conversas e de gráfico livres (ficam recortados). O pilar "Criação de sites" já usa os prints reais dos projetos, que se revezam na janela da frente.
+
+## 9. Atalhos fixos: som e WhatsApp
+
+`assets/js/dock.js` + bloco "ATALHOS FIXOS" no `site.css`. A trilha fica em `assets/audio/trilha.mp3` (112 kbps, 2,4 MB), começa **desligada** e só é baixada no primeiro clique. Volume e fades no objeto `SOM`. A escolha fica salva no navegador. Eventos: `som_toggle` (`estado`) e `contact_whatsapp` com `cta_position: "dock"`.
+
+Licença da trilha: "Synthwave" (arpmedia, Pixabay). Confirme a licença antes de publicar.
+
+## 10. Quem somos: a foto vira o logo
+
+`assets/js/pixels.js` + bloco "QUEM SOMOS: foto do fundador" no `site.css`. A tela **trava** em Quem somos (cena presa com `position: sticky`) enquanto a foto se pixeliza, os pixels voam até os pontos do logo completo (`logo-full-blue.svg`) e ganham a cor Blue 900; no fim, o SVG real assume e fica na tela até destravar.
+
+- **Desktop** (a partir de 1024 × 600): foto e texto ficam parados juntos. Duração: `.cena-sobre .sobre__cena { height: 320vh }`.
+- **Celular e telas baixas:** só a foto fica parada; o texto vem depois. Duração: `.cena-sobre .sobre__trilho { height: calc(var(--foto-h) + 170vh) }`.
+- **Fases** (objeto `PX`): foto parada até `FOTO_FIM` (0,20), pixelização até `PIXEL_FIM` (0,30), voo até `VOO_FIM` (0,76), logo entra em `LOGO` (0,72 a 0,82) e fica até o fim. Para a foto ou o logo ficarem mais tempo, aumente a altura da cena ou mexa nessas fases.
+- **Foto:** `assets/img/sodre-copo.webp` (495 × 644 px). Para mais nitidez, troque por uma versão de cerca de 1000 × 1300 px com o mesmo nome e a mesma proporção.
+- **Movimento reduzido ou sem JS:** sem trava; a foto fica parada e o logo aparece logo abaixo dela.
+
+## 11. Loader
+
+Fica no começo do `<body>` do `index.html` (marcação, SVG do logo e script inline) + bloco "LOADER" no `site.css`. Não depende de nenhum arquivo externo, então aparece na primeira pintura.
+
+- **O que faz (≈1,9 s na primeira visita):** o logo completo é montado peça por peça. O contorno dos colchetes e do "n" se desenha e depois se preenche, enquanto os colchetes nascem juntos e se afastam (a "alocação" da marca). "new" e "arrays" sobem letra por letra de dentro de uma máscara e "Experiência Digital" entra em seguida. Uma falha cromática rápida chama a atenção. Na saída, as letras recuam, os colchetes se fecham no centro e viram uma linha de luz que cresce até quase a altura da tela. As duas metades do fundo se abrem como `[ ]` e revelam o site, e a entrada do Hero começa nesse instante.
+- **Visitas seguintes na mesma sessão:** só a abertura (≈1 s). O controle é feito com `sessionStorage` (`na-ld`).
+- **Espera:** o HTML e as fontes, com teto de 2,6 s. As imagens não entram nessa espera.
+- **Enquanto carrega:** `html.carregando` trava a rolagem (Lenis parado) e pausa as animações de entrada do Hero. O evento `na:pronto` é disparado quando o site é revelado.
+- **Segurança:** se algo travar, o loader some sozinho em 6 s.
+- **Movimento reduzido ou sem JS:** sem loader.
+- **SVG do logo:** o `logo-full` foi separado em peças (colchete esquerdo, n, colchete direito, 3 letras de "new", 6 de "arrays" e 18 de "Experiência Digital"). Se o logo oficial mudar, gere as peças de novo a partir do novo SVG.
+- **Tempos:** objeto `T` e durações no script inline.
