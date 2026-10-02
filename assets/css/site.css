@@ -1816,7 +1816,8 @@ input, select, textarea { font: inherit; }
 .origem__frase {
   font-size: clamp(1.0625rem, 0.9rem + 0.6vw, 1.375rem);
   color: var(--blue-100);
-  max-width: 34ch;
+  max-width: 44ch;
+  text-wrap: balance;
 }
 .origem--js .origem__marca { opacity: var(--t); transform: translateY(calc((1 - var(--t)) * 6px)); }
 .origem--js .origem__frase { opacity: calc(var(--t) * 1.2 - 0.2); transform: translateY(calc((1 - var(--t)) * 16px)); }
