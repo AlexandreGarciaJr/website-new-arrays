@@ -114,7 +114,7 @@ node testes/axe.mjs                                # acessibilidade (WCAG 2.2 AA
 | Arquivo | O que faz |
 |---|---|
 | `assets/js/tinta.js` | Fumaça do Hero: simulação de fluido em WebGL (sem bibliotecas). Plumas sobem do lado direito; o cursor sopra e dispersa a fumaça, que gira e volta a preencher. A fumaça fica no Hero; na cena de abertura ela se expande, se quebra em fiapos e some (`DISPERSAO_FIM` define em que ponto da cena ela termina de sumir). Ajustes rápidos no objeto `CFG` do topo do arquivo: `SUBIDA` (velocidade das plumas), `TURBULENCIA` (quanto se espalha), `DISSIP_DENS` (quanto some), `RAIO_CURSOR`/`FORCA_CURSOR`/`RAJADA` (dispersão do cursor) e `TEMPO` (velocidade geral). |
-| `assets/js/fluxo.js` | Fluxo de campanhas interativo (seção `#fluxo`). Os caminhos e textos ficam nos objetos `NOS`, `ARESTAS` e `ROTAS`. |
+| `assets/js/fluxo.js` | Fluxo de campanhas interativo (seção `#fluxo`). O mapa ocupa a seção de ponta a ponta; os botões de origem ficam numa fileira abaixo dele e o botão ativo abre um dropdown com as etapas (clicar de novo fecha). Caminhos e textos nos objetos `NOS`, `ARESTAS` e `ROTAS`. No celular, o mapa fica em tamanho legível numa faixa com arrasto lateral, e a rolagem acompanha o ponto (o lead) pelo caminho; enquanto a pessoa arrasta, ela assume o controle. |
 | `assets/js/movimento.js` | Hovers (botões, menu, serviços, projetos) e a coreografia de rolagem com GSAP + ScrollTrigger. |
 | `assets/js/vendor/` | GSAP 3.15 e ScrollTrigger (licença gratuita da GSAP), carregados na primeira interação (rolar, tocar, mover o mouse) ou após 7 s. Sem eles, o trilho de projetos vira rolagem lateral nativa. |
 

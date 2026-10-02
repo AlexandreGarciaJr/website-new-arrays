@@ -607,55 +607,65 @@
   <div class="secao__in">
     <div class="fluxo__cabeca">
       <h2 id="fluxo-titulo" class="fluxo__titulo">Do anúncio à reunião, cada lead tem um caminho.</h2>
-      <p class="fluxo__lede">Marketing não traz clientes prontos: traz leads, pessoas interessadas. O que transforma interesse em reunião é o caminho depois do clique. Escolha uma origem e veja o fluxo.</p>
-    </div>
-
-    <div class="fluxo__grade">
-      <div class="fluxo__lado">
-        <p class="fluxo__pergunta" id="fluxo-origem">De onde vem o lead?</p>
-        <div class="fluxo__origens" role="group" aria-labelledby="fluxo-origem">
-          <button type="button" class="fluxo__chip" data-rota="meta1" aria-pressed="true">Meta Ads <svg class="fluxo__seta" aria-hidden="true"><use href="#i-right"/></svg> WhatsApp</button>
-          <button type="button" class="fluxo__chip" data-rota="meta2" aria-pressed="false">Meta Ads <svg class="fluxo__seta" aria-hidden="true"><use href="#i-right"/></svg> Formulário da Meta</button>
-          <button type="button" class="fluxo__chip" data-rota="meta3" aria-pressed="false">Meta Ads <svg class="fluxo__seta" aria-hidden="true"><use href="#i-right"/></svg> Formulário do site</button>
-          <button type="button" class="fluxo__chip" data-rota="google" aria-pressed="false">Google Meu Negócio e Maps</button>
-          <button type="button" class="fluxo__chip" data-rota="bio" aria-pressed="false">Link da bio do Instagram</button>
-          <button type="button" class="fluxo__chip" data-rota="seguidor" aria-pressed="false">Novo seguidor no Instagram</button>
-        </div>
-        <div class="fluxo__painel" aria-live="polite">
-          <p class="fluxo__rota" data-rota-nome>Meta Ads → WhatsApp</p>
-          <ol class="fluxo__passos" data-passos>
-            <li><strong>Campanha no Meta Ads</strong><span>Anúncios no Instagram e no Facebook com criativos A, B e C, levando direto para uma conversa.</span></li>
-            <li><strong>WhatsApp</strong><span>A conversa começa no WhatsApp.</span></li>
-            <li><strong>CRM com IA</strong><span>O contato é registrado no CRM, com apoio de inteligência artificial.</span></li>
-            <li><strong>Esquentar e qualificar</strong><span>O lead recebe contexto e é filtrado antes do contato comercial.</span></li>
-            <li><strong>Atendimento ou reunião</strong><span>Conversa comercial com quem tem interesse real.</span></li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="fluxo__mapa" data-mapa aria-hidden="true">
-        <svg class="fluxo__linhas" data-linhas></svg>
-        <div class="fluxo__no fluxo__no--origem" data-no="meta1" style="--c:1;--r:1"><small>Meta Ads</small>Campanha 1</div>
-        <div class="fluxo__no fluxo__no--origem" data-no="meta2" style="--c:1;--r:2"><small>Meta Ads</small>Campanha 2</div>
-        <div class="fluxo__no fluxo__no--origem" data-no="meta3" style="--c:1;--r:3"><small>Meta Ads</small>Campanha 3</div>
-        <div class="fluxo__no fluxo__no--origem" data-no="google" style="--c:1;--r:4"><small>Google Ads</small>Meu Negócio e Maps</div>
-        <div class="fluxo__no fluxo__no--origem" data-no="bio" style="--c:1;--r:5"><small>Instagram</small>Link da bio</div>
-        <div class="fluxo__no fluxo__no--origem" data-no="seguidor" style="--c:1;--r:6"><small>Instagram</small>Novo seguidor</div>
-        <div class="fluxo__no" data-no="wpp" style="--c:2;--r:1">WhatsApp</div>
-        <div class="fluxo__no" data-no="fmeta" style="--c:2;--r:2">Formulário da Meta</div>
-        <div class="fluxo__no" data-no="lp" style="--c:2;--r:5">Landing page</div>
-        <div class="fluxo__no" data-no="many" style="--c:2;--r:6">ManyChat</div>
-        <div class="fluxo__no" data-no="crm" style="--c:3;--r:1">CRM com IA</div>
-        <div class="fluxo__no" data-no="perg" style="--c:3;--r:2">Perguntas-chave</div>
-        <div class="fluxo__no" data-no="form" style="--c:3;--r:4">Formulário</div>
-        <div class="fluxo__no fluxo__no--ramo" data-no="disparo" style="--c:4;--r:1">Disparo no WhatsApp</div>
-        <div class="fluxo__no fluxo__no--chave" data-no="qual" style="--c:4;--r:3">Esquentar e qualificar</div>
-        <div class="fluxo__no fluxo__no--fim" data-no="atend" style="--c:5;--r:3">Atendimento ou reunião</div>
+      <div class="fluxo__intro">
+        <p class="fluxo__lede">Marketing não traz clientes prontos: traz Leads (potenciais clientes). O que transforma interesse em reunião é o caminho depois do clique. Escolha uma origem e veja o fluxo.</p>
+        <button class="btn btn--primario" type="button" data-abrir-form data-servico="trafego_pago" data-cta-pos="fluxo">Planejar minhas campanhas</button>
       </div>
     </div>
-    <div class="fluxo__rodape">
+  </div>
+
+  <!-- mapa de ponta a ponta da seção (no celular: faixa com arrasto lateral; ver assets/js/fluxo.js) -->
+  <div class="fluxo__palco" data-palco role="region" aria-label="Mapa do fluxo de campanhas" tabindex="0">
+    <div class="fluxo__mapa" data-mapa aria-hidden="true">
+      <svg class="fluxo__linhas" data-linhas></svg>
+      <div class="fluxo__no fluxo__no--origem" data-no="meta1" style="--c:1;--r:1"><small>Meta Ads</small>Campanha 1</div>
+      <div class="fluxo__no fluxo__no--origem" data-no="meta2" style="--c:1;--r:2"><small>Meta Ads</small>Campanha 2</div>
+      <div class="fluxo__no fluxo__no--origem" data-no="meta3" style="--c:1;--r:3"><small>Meta Ads</small>Campanha 3</div>
+      <div class="fluxo__no fluxo__no--origem" data-no="google" style="--c:1;--r:4"><small>Google Ads</small>Meu Negócio e Maps</div>
+      <div class="fluxo__no fluxo__no--origem" data-no="bio" style="--c:1;--r:5"><small>Instagram</small>Link da bio</div>
+      <div class="fluxo__no fluxo__no--origem" data-no="seguidor" style="--c:1;--r:6"><small>Instagram</small>Novo seguidor</div>
+      <div class="fluxo__no" data-no="wpp" style="--c:2;--r:1">WhatsApp</div>
+      <div class="fluxo__no" data-no="fmeta" style="--c:2;--r:2">Formulário da Meta</div>
+      <div class="fluxo__no" data-no="many" style="--c:2;--r:6">ManyChat</div>
+      <div class="fluxo__no" data-no="crm" style="--c:3;--r:1">CRM com IA</div>
+      <div class="fluxo__no" data-no="perg" style="--c:3;--r:2">Perguntas-chave</div>
+      <div class="fluxo__no fluxo__no--site" data-no="lp" style="--c:3;--r:4 / span 2"><small>Destino</small>Landing Page (Site)</div>
+      <div class="fluxo__no fluxo__no--ramo" data-no="disparo" style="--c:4;--r:1">Disparo no WhatsApp</div>
+      <div class="fluxo__no" data-no="form" style="--c:4;--r:4 / span 2">Formulário</div>
+      <div class="fluxo__no fluxo__no--chave" data-no="qual" style="--c:5;--r:3 / span 2">Esquentar e qualificar</div>
+      <div class="fluxo__no fluxo__no--fim" data-no="atend" style="--c:6;--r:3 / span 2">Atendimento ou reunião</div>
+    </div>
+  </div>
+  <p class="fluxo__arraste" aria-hidden="true">Arraste para o lado para ver o caminho inteiro.</p>
+
+  <div class="secao__in">
+    <div class="fluxo__escolha">
+      <p class="fluxo__pergunta" id="fluxo-origem">De onde vem o lead?</p>
+      <div class="fluxo__origens" role="group" aria-labelledby="fluxo-origem" data-origens>
+        <button type="button" class="fluxo__chip" data-rota="meta1" aria-pressed="true" aria-controls="fluxo-painel">Meta Ads <svg class="fluxo__seta" aria-hidden="true"><use href="#i-right"/></svg> WhatsApp</button>
+        <button type="button" class="fluxo__chip" data-rota="meta2" aria-pressed="false" aria-controls="fluxo-painel">Meta Ads <svg class="fluxo__seta" aria-hidden="true"><use href="#i-right"/></svg> Formulário da Meta</button>
+        <button type="button" class="fluxo__chip" data-rota="meta3" aria-pressed="false" aria-controls="fluxo-painel">Meta Ads <svg class="fluxo__seta" aria-hidden="true"><use href="#i-right"/></svg> Formulário do site</button>
+        <button type="button" class="fluxo__chip" data-rota="google" aria-pressed="false" aria-controls="fluxo-painel">Google Meu Negócio e Maps</button>
+        <button type="button" class="fluxo__chip" data-rota="bio" aria-pressed="false" aria-controls="fluxo-painel">Link da bio do Instagram</button>
+        <button type="button" class="fluxo__chip" data-rota="seguidor" aria-pressed="false" aria-controls="fluxo-painel">Novo seguidor no Instagram</button>
+      </div>
+      <!-- dropdown: abre abaixo dos botões com a explicação do caminho escolhido -->
+      <div class="fluxo__drop" data-drop>
+        <div class="fluxo__drop-in">
+          <div class="fluxo__painel" id="fluxo-painel" aria-live="polite">
+            <span class="fluxo__seta-drop" data-seta-drop aria-hidden="true"></span>
+            <p class="fluxo__rota" data-rota-nome>Meta Ads → WhatsApp</p>
+            <ol class="fluxo__passos" data-passos>
+              <li><strong>Campanha no Meta Ads</strong><span>Anúncios no Instagram e no Facebook com criativos A, B e C, levando direto para uma conversa.</span></li>
+              <li><strong>WhatsApp</strong><span>A conversa começa no WhatsApp.</span></li>
+              <li><strong>CRM com IA</strong><span>O contato é registrado no CRM, com apoio de inteligência artificial.</span></li>
+              <li><strong>Esquentar e qualificar</strong><span>O lead recebe contexto e é filtrado antes do contato comercial.</span></li>
+              <li><strong>Atendimento ou reunião</strong><span>Conversa comercial com quem tem interesse real.</span></li>
+            </ol>
+          </div>
+        </div>
+      </div>
       <p class="fluxo__nota">Exemplo de fluxo de campanhas. Cada projeto recebe o caminho adequado ao negócio.</p>
-      <button class="btn btn--primario" type="button" data-abrir-form data-servico="trafego_pago" data-cta-pos="fluxo">Planejar minhas campanhas</button>
     </div>
   </div>
 </section>
