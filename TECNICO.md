@@ -173,11 +173,10 @@ Licença da trilha: "Synthwave" (arpmedia, Pixabay). Confirme a licença antes d
 
 Fica no começo do `<body>` do `index.html` (marcação, SVG do logo e script inline) + bloco "LOADER" no `site.css`. Não depende de nenhum arquivo externo, então aparece na primeira pintura.
 
-- **O que faz (≈1,9 s na primeira visita):** o logo completo é montado peça por peça. O contorno dos colchetes e do "n" se desenha e depois se preenche, enquanto os colchetes nascem juntos e se afastam (a "alocação" da marca). "new" e "arrays" sobem letra por letra de dentro de uma máscara e "Experiência Digital" entra em seguida. Uma falha cromática rápida chama a atenção. Na saída, as letras recuam, os colchetes se fecham no centro e viram uma linha de luz que cresce até quase a altura da tela. As duas metades do fundo se abrem como `[ ]` e revelam o site, e a entrada do Hero começa nesse instante.
-- **Visitas seguintes na mesma sessão:** só a abertura (≈1 s). O controle é feito com `sessionStorage` (`na-ld`).
+- **O que faz (≈3,5 s, em toda visita e também ao atualizar a página):** o logo completo é montado peça por peça. O contorno dos colchetes e do "n" se desenha e depois se preenche, enquanto os colchetes nascem juntos e se afastam (a "alocação" da marca). "new" e "arrays" sobem letra por letra de dentro de uma máscara e "Experiência Digital" entra em seguida. Uma falha cromática rápida chama a atenção. Na saída, as letras recuam, os colchetes se fecham no centro e viram uma linha de luz que cresce até quase a altura da tela. As duas metades do fundo se abrem como `[ ]` e revelam o site, e a entrada do Hero começa nesse instante.
 - **Espera:** o HTML e as fontes, com teto de 2,6 s. As imagens não entram nessa espera.
 - **Enquanto carrega:** `html.carregando` trava a rolagem (Lenis parado) e pausa as animações de entrada do Hero. O evento `na:pronto` é disparado quando o site é revelado.
 - **Segurança:** se algo travar, o loader some sozinho em 6 s.
 - **Movimento reduzido ou sem JS:** sem loader.
 - **SVG do logo:** o `logo-full` foi separado em peças (colchete esquerdo, n, colchete direito, 3 letras de "new", 6 de "arrays" e 18 de "Experiência Digital"). Se o logo oficial mudar, gere as peças de novo a partir do novo SVG.
-- **Tempos:** objeto `T` e durações no script inline.
+- **Tempos:** no script inline, `VEL` multiplica as durações (`intro` 1,3 e `saida` 1,15; maior = mais lento) e `T.pausa` é o tempo com o logo pronto na tela antes da abertura (380 ms).

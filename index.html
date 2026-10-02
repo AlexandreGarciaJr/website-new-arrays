@@ -126,7 +126,7 @@
 </script>
 </head>
 <body>
-<!-- ============ LOADER (só na primeira visita da sessão é completo; ~1,5 s) ============
+<!-- ============ LOADER (completo em toda visita e ao atualizar; ~3,5 s) ============
      O logo completo é montado peça por peça (colchetes, n, "new", "arrays", "Experiência Digital"),
      depois tudo recua, os colchetes viram uma linha de luz e se abrem revelando o site.
      Sem JS ou com movimento reduzido: o loader não aparece. Ajustes: objeto T no script abaixo. -->
@@ -151,20 +151,23 @@
   var html = document.documentElement, ld = document.getElementById("ld");
   if (!ld || !html.classList.contains("com-ld") || !ld.animate) { if (ld) ld.remove(); html.classList.remove("carregando", "com-ld"); return; }
   var $ = function (s) { return ld.querySelector(s); }, $$ = function (s) { return Array.prototype.slice.call(ld.querySelectorAll(s)); };
-  var curta = false;
-  try { curta = sessionStorage.getItem("na-ld") === "1"; sessionStorage.setItem("na-ld", "1"); } catch (e) {}
 
-  // tempos (ms). A primeira visita monta o logo; as seguintes só fazem a abertura.
-  var T = curta ? { intro: 380, falha: 0 } : { intro: 1180, falha: 150 };
+  // tempos (ms). O loader completo toca em toda visita, inclusive ao atualizar a página.
+  // VEL multiplica durações e atrasos: maior = mais lento. PAUSA = tempo com o logo pronto na tela.
+  var VEL = { intro: 1.3, saida: 1.15 }, vel = VEL.intro;
+  var T = { intro: 1180, falha: 150, pausa: 380 };
   var EXPO = "cubic-bezier(0.16, 1, 0.3, 1)", IO = "cubic-bezier(0.76, 0, 0.24, 1)", ENTRA = "cubic-bezier(0.55, 0, 0.75, 0.2)";
   var esq = $(".ld__esq"), dir = $(".ld__dir"), n = $(".ld__n"), logo = $(".ld__logo");
   var letrasNew = $$(".ld__new .ld__l"), letrasArr = $$(".ld__arrays .ld__l"), slogan = $$(".ld__s");
-  function anim(el, kf, o) { return el.animate(kf, Object.assign({ fill: "both" }, o)); }
+  function anim(el, kf, o) {
+    o = Object.assign({ fill: "both" }, o);
+    if (o.duration) o.duration *= vel;
+    if (o.delay) o.delay *= vel;
+    return el.animate(kf, o);
+  }
 
   /* ---------- 1. montagem do logo ---------- */
-  if (curta) {
-    anim(logo, [{ opacity: 0, transform: "scale(0.96)" }, { opacity: 1, transform: "none" }], { duration: 320, easing: EXPO });
-  } else {
+  {
     // colchetes e n: o contorno se desenha, depois o preenchimento entra
     [esq, n, dir].forEach(function (p, i) {
       var len = Math.ceil(p.getTotalLength());
@@ -195,10 +198,11 @@
     if (document.readyState !== "loading") feito(); else document.addEventListener("DOMContentLoaded", feito, { once: true });
     setTimeout(ok, 2600);
   });
-  var intro = new Promise(function (ok) { setTimeout(ok, T.intro + T.falha); });
+  var intro = new Promise(function (ok) { setTimeout(ok, (T.intro + T.falha) * VEL.intro + T.pausa); });
 
   /* ---------- 3. saída: o logo recua, os colchetes viram uma linha e se abrem ---------- */
   Promise.all([pronto, intro]).then(function () {
+    vel = VEL.saida;
     var cols = $$(".ld__col"), lados = $$(".ld__lado");
     var vh = window.innerHeight;
     var rLogo = esq.getBoundingClientRect(), rN = n.getBoundingClientRect();
@@ -229,7 +233,7 @@
     setTimeout(function () {
       html.classList.remove("carregando");
       document.dispatchEvent(new CustomEvent("na:pronto"));
-    }, atraso + 60);
+    }, (atraso + 60) * vel);
     anim(lados[0], [{ transform: "none" }, { transform: "translateX(-100%)" }], { duration: abrir, delay: atraso, easing: IO });
     var ultima = anim(lados[1], [{ transform: "none" }, { transform: "translateX(100%)" }], { duration: abrir, delay: atraso, easing: IO });
     ultima.finished.then(function () { ld.remove(); html.classList.remove("com-ld"); });

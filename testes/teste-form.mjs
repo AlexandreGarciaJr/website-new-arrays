@@ -26,6 +26,8 @@ async function nova(vp, { endpoint = true } = {}) {
     });
   }
   await p.goto(BASE, { waitUntil: 'networkidle' });
+  // espera o loader terminar (ele cobre a página por ~3,5 s)
+  await p.waitForFunction(() => !document.getElementById('ld'), null, { timeout: 10000 });
   p._erros = erros;
   return p;
 }
