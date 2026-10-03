@@ -356,7 +356,7 @@
       finalT.classList.add("preencher");
       gsap.fromTo(finalT, { "--fill": "0%" }, {
         "--fill": "100%", ease: "none",
-        scrollTrigger: { trigger: ".final", start: "top 85%", end: "center 55%", scrub: 0.5 }
+        scrollTrigger: { trigger: finalT, start: "bottom 95%", end: "bottom 35%", scrub: 0.6 } // começa só quando o título inteiro já entrou na tela
       });
     }
   }

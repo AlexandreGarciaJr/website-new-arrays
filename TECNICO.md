@@ -155,7 +155,7 @@ Proporções: Reels 9:16, post 4:5, prints de conversas e de gráfico livres (fi
 
 ## 9. Atalhos fixos: som e WhatsApp
 
-`assets/js/dock.js` + bloco "ATALHOS FIXOS" no `site.css`. A trilha fica em `assets/audio/trilha.mp3` (112 kbps, 2,4 MB), começa **desligada** e só é baixada no primeiro clique. Volume e fades no objeto `SOM`. A escolha fica salva no navegador. Eventos: `som_toggle` (`estado`) e `contact_whatsapp` com `cta_position: "dock"`.
+`assets/js/dock.js` + bloco "ATALHOS FIXOS" no `site.css`. A trilha fica em `assets/audio/trilha.mp3` (112 kbps, 2,4 MB) e vem **ligada por padrão**: o site tenta tocar assim que o loader abre (o arquivo só é baixado nesse momento). Como os navegadores costumam bloquear som antes de um gesto, se houver bloqueio a música começa no primeiro clique, toque ou tecla. Quem desliga o som fica com ele desligado nas próximas visitas (`localStorage` `na-som`). Volume e fades no objeto `SOM`. A escolha fica salva no navegador. Eventos: `som_toggle` (`estado`) e `contact_whatsapp` com `cta_position: "dock"`.
 
 Licença da trilha: "Synthwave" (arpmedia, Pixabay). Confirme a licença antes de publicar.
 
@@ -184,3 +184,11 @@ Fica no começo do `<body>` do `index.html` (marcação, SVG do logo e script in
 ## 12. Pilares: zoom no hover (desktop com mouse)
 
 O título da seção fica em uma linha no desktop. Ao passar o mouse sobre um pilar, ele cresce até cerca de 62% da largura da grade, sobe um pouco sobre o título e flutua à frente; os outros dois escurecem e recuam. O conteúdo se reorganiza no tamanho maior (não é escala), então imagens e textos ficam nítidos. As margens do zoom são calculadas pelo espaço real da tela, no fim de `assets/js/abertura.js` (objeto `ZOOM`: `LARGURA`, `LARGURA_MAX`, `SUBIR_MAX`, `MARGEM_TELA`). Testado em 1280 × 720, 1366 × 768 e 1440 × 900. Celular e tablet: sem zoom (os pilares já ficam empilhados e grandes).
+
+## 13. Sons de interface (hover e clique)
+
+`assets/js/sfx.js`. Sons curtos no estilo de menu de console, sintetizados com Web Audio (nenhum arquivo extra): **hover** (tic agudo), **clique** (duas notas subindo), **seleção** (chips do fluxo, opções do formulário, perguntas frequentes, botão de som) e **voltar** (fechar o formulário, botão Voltar). O hover só soa com mouse; no celular soam os toques. O botão de som do dock desliga também os efeitos. O áudio só é liberado depois do primeiro gesto da pessoa (regra dos navegadores), a não ser que o navegador já permita som. Ajustes no objeto `SFX`: `VOLUME` (0,16), `ECO`, `ECO_TEMPO` e `HOVER_MIN_MS`. Os timbres ficam no objeto `SONS`.
+
+## 14. Pilar "Criação de sites": vitrine
+
+O pilar mostra uma vitrine de sites reais (lista `.vitrine` no `index.html`). No card normal do desktop aparecem 3 sites empilhados (Silas Ferreira, GHM Finanças e danielsodre.com). Ao ampliar o pilar (hover), o primeiro site cresce em cima e os outros entram numa grade embaixo, com o atalho "Ver todos os projetos". No celular e no tablet, a vitrine já aparece nesse formato ampliado. Cada site abre em nova aba. Para trocar a ordem ou incluir um site, edite os itens `<li class="vitrine__item">` (os 3 primeiros são os do card normal).

@@ -1,10 +1,11 @@
 /* =========================================================
    New Arrays | Atalhos fixos (som + WhatsApp)
-   SOM: começa DESLIGADO (navegadores bloqueiam áudio sem um clique).
-   O arquivo só é baixado no primeiro clique (preload="none").
+   SOM: LIGADO POR PADRÃO. O site tenta tocar assim que o loader abre;
+   como os navegadores costumam bloquear áudio antes de um gesto, se for
+   bloqueado a música começa no primeiro clique, toque ou tecla da pessoa.
+   Quem desligar o som fica com ele desligado nas próximas visitas.
+   O arquivo só é baixado depois do carregamento (não pesa no início).
    Liga com fade-in, desliga com fade-out, pausa com a aba oculta.
-   A escolha fica salva neste navegador: quem deixou ligado ouve de novo
-   a partir da primeira interação na próxima visita.
    Volume e duração dos fades: objeto SOM abaixo.
    ========================================================= */
 (function () {
@@ -17,7 +18,8 @@
   var rotulo = btn.querySelector("[data-som-rotulo]");
   var audio = null, ligado = false, fadeRaf = 0;
 
-  function lerPref() { try { return localStorage.getItem(SOM.CHAVE) === "1"; } catch (e) { return false; } }
+  // padrão: ligado; só fica desligado se a pessoa desligou antes
+  function lerPref() { try { return localStorage.getItem(SOM.CHAVE) !== "0"; } catch (e) { return true; } }
   function salvarPref(v) { try { localStorage.setItem(SOM.CHAVE, v ? "1" : "0"); } catch (e) { /* sem armazenamento: tudo bem */ } }
   function track(ev, dados) { if (window.dataLayer) window.dataLayer.push(Object.assign({ event: ev }, dados || {})); }
 
@@ -73,15 +75,30 @@
     else if (!document.hidden && pausadoPorAba) { pausadoPorAba = false; if (ligado) audio.play().catch(function () {}); }
   });
 
-  // quem deixou o som ligado na última visita: retoma na primeira interação (o navegador exige um gesto)
-  if (lerPref()) {
-    var EV = ["pointerdown", "keydown"];
+  // som ligado por padrão: tenta tocar quando o site abre; se o navegador bloquear,
+  // começa no primeiro gesto da pessoa (clique, toque ou tecla)
+  function armarGesto() {
+    var EV = ["pointerdown", "keydown", "touchend"];
     var retomar = function (e) {
       EV.forEach(function (n) { window.removeEventListener(n, retomar, true); });
-      if (!ligado && !btn.contains(e.target)) ligar(false);
+      if (!ligado && lerPref() && !btn.contains(e.target)) ligar(false);
     };
     EV.forEach(function (n) { window.addEventListener(n, retomar, true); });
   }
+  function tentarTocar() {
+    if (!lerPref() || ligado) return;
+    criar();
+    audio.preload = "auto";
+    var p = audio.play();
+    if (p && p.then) {
+      p.then(function () { ligado = true; pintar(); fade(SOM.VOLUME, SOM.FADE_IN); })
+       .catch(function () { armarGesto(); });
+    } else { armarGesto(); }
+  }
+  var inicio = function () { setTimeout(tentarTocar, 150); };
+  if (document.documentElement.classList.contains("carregando")) document.addEventListener("na:pronto", inicio, { once: true });
+  else if (document.readyState === "complete") inicio();
+  else window.addEventListener("load", inicio, { once: true });
 
   // o dock aparece depois que o Hero entrou (não disputa a primeira leitura)
   requestAnimationFrame(function () { dock.classList.add("dock--pronto"); });

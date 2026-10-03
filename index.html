@@ -97,6 +97,7 @@
 <script src="assets/js/tinta.js" defer></script>
 <script src="assets/js/movimento.js" defer></script>
 <script src="assets/js/dock.js" defer></script>
+<script src="assets/js/sfx.js" defer></script>
 <script src="assets/js/abertura.js" defer></script>
 <script src="assets/js/pixels.js" defer></script>
 <script>
@@ -510,21 +511,55 @@
           <h3 id="pl-sites" class="pilar__titulo">Criação de sites</h3>
         </div>
         <p class="pilar__txt">Um site sob medida que apresenta sua empresa e transforma visitas em contatos.</p>
+        <!-- vitrine de sites reais: 3 empilhados no card normal; ampliado (hover), o primeiro cresce e os outros aparecem embaixo -->
         <div class="pilar__midia pilar__midia--sites">
-          <figure class="pilar__midia-item janela janela--tras" aria-hidden="true">
-            <span class="janela__barra"><i></i><i></i><i></i></span>
-            <img src="assets/img/projetos/taboaoprev-480.webp" width="480" height="270" alt="" loading="lazy" decoding="async">
-          </figure>
-          <figure class="pilar__midia-item janela janela--frente">
-            <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span data-janela-url>silasferreira.com</span></span>
-            <span class="janela__tela" data-janela>
-              <img src="assets/img/projetos/silas-ferreira-960.webp" srcset="assets/img/projetos/silas-ferreira-480.webp 480w, assets/img/projetos/silas-ferreira-960.webp 960w" sizes="(min-width: 1024px) 420px, 90vw" width="960" height="540" alt="Site de Silas Ferreira, feito pela New Arrays" loading="lazy" decoding="async" data-url="silasferreira.com" class="ativa">
-              <img src="assets/img/projetos/ghm-negocios-960.webp" srcset="assets/img/projetos/ghm-negocios-480.webp 480w, assets/img/projetos/ghm-negocios-960.webp 960w" sizes="(min-width: 1024px) 420px, 90vw" width="960" height="540" alt="Site da GHM Finanças, feito pela New Arrays" loading="lazy" decoding="async" data-url="ghmnegocios.com.br">
-              <img src="assets/img/projetos/danielsodre-960.webp" srcset="assets/img/projetos/danielsodre-480.webp 480w, assets/img/projetos/danielsodre-960.webp 960w" sizes="(min-width: 1024px) 420px, 90vw" width="960" height="540" alt="Site danielsodre.com, feito pela New Arrays" loading="lazy" decoding="async" data-url="danielsodre.com">
-              <img src="assets/img/projetos/autoescola-topo-960.webp" srcset="assets/img/projetos/autoescola-topo-480.webp 480w, assets/img/projetos/autoescola-topo-960.webp 960w" sizes="(min-width: 1024px) 420px, 90vw" width="960" height="540" alt="Site da Autoescola Topo, feito pela New Arrays" loading="lazy" decoding="async" data-url="autoescolatopo.com.br">
-            </span>
-            <figcaption class="sr-only">Exemplos de sites no ar feitos pela New Arrays.</figcaption>
-          </figure>
+          <ul class="vitrine" role="list" aria-label="Sites no ar feitos pela New Arrays">
+            <li class="vitrine__item pilar__midia-item">
+              <a class="vitrine__link" href="https://silasferreira.com" target="_blank" rel="noopener">
+                <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span>silasferreira.com</span></span>
+                <img src="assets/img/projetos/silas-ferreira-480.webp" srcset="assets/img/projetos/silas-ferreira-480.webp 480w, assets/img/projetos/silas-ferreira-960.webp 960w" sizes="(min-width: 1024px) 640px, 90vw" width="960" height="540" alt="" loading="lazy" decoding="async">
+                <span class="vitrine__nome">Silas Ferreira<span class="sr-only"> (abre o site em nova aba)</span></span>
+              </a>
+            </li>
+            <li class="vitrine__item pilar__midia-item">
+              <a class="vitrine__link" href="https://ghmnegocios.com.br" target="_blank" rel="noopener">
+                <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span>ghmnegocios.com.br</span></span>
+                <img src="assets/img/projetos/ghm-negocios-480.webp" srcset="assets/img/projetos/ghm-negocios-480.webp 480w, assets/img/projetos/ghm-negocios-960.webp 960w" sizes="(min-width: 1024px) 240px, 45vw" width="960" height="540" alt="" loading="lazy" decoding="async">
+                <span class="vitrine__nome">GHM Finanças<span class="sr-only"> (abre o site em nova aba)</span></span>
+              </a>
+            </li>
+            <li class="vitrine__item pilar__midia-item">
+              <a class="vitrine__link" href="https://danielsodre.com" target="_blank" rel="noopener">
+                <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span>danielsodre.com</span></span>
+                <img src="assets/img/projetos/danielsodre-480.webp" srcset="assets/img/projetos/danielsodre-480.webp 480w, assets/img/projetos/danielsodre-960.webp 960w" sizes="(min-width: 1024px) 240px, 45vw" width="960" height="540" alt="" loading="lazy" decoding="async">
+                <span class="vitrine__nome">danielsodre.com<span class="sr-only"> (abre o site em nova aba)</span></span>
+              </a>
+            </li>
+            <li class="vitrine__item pilar__midia-item">
+              <a class="vitrine__link" href="https://autoescolatopo.com.br" target="_blank" rel="noopener">
+                <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span>autoescolatopo.com.br</span></span>
+                <img src="assets/img/projetos/autoescola-topo-480.webp" srcset="assets/img/projetos/autoescola-topo-480.webp 480w, assets/img/projetos/autoescola-topo-960.webp 960w" sizes="(min-width: 1024px) 240px, 45vw" width="960" height="540" alt="" loading="lazy" decoding="async">
+                <span class="vitrine__nome">Autoescola Topo<span class="sr-only"> (abre o site em nova aba)</span></span>
+              </a>
+            </li>
+            <li class="vitrine__item pilar__midia-item">
+              <a class="vitrine__link" href="https://sorojet.com.br" target="_blank" rel="noopener">
+                <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span>sorojet.com.br</span></span>
+                <img src="assets/img/projetos/sorojet-480.webp" srcset="assets/img/projetos/sorojet-480.webp 480w, assets/img/projetos/sorojet-960.webp 960w" sizes="(min-width: 1024px) 240px, 45vw" width="960" height="540" alt="" loading="lazy" decoding="async">
+                <span class="vitrine__nome">Sorojet<span class="sr-only"> (abre o site em nova aba)</span></span>
+              </a>
+            </li>
+            <li class="vitrine__item pilar__midia-item">
+              <a class="vitrine__link" href="https://taboaoprev.sp.gov.br" target="_blank" rel="noopener">
+                <span class="janela__barra" aria-hidden="true"><i></i><i></i><i></i><span>taboaoprev.sp.gov.br</span></span>
+                <img src="assets/img/projetos/taboaoprev-480.webp" srcset="assets/img/projetos/taboaoprev-480.webp 480w, assets/img/projetos/taboaoprev-960.webp 960w" sizes="(min-width: 1024px) 240px, 45vw" width="960" height="540" alt="" loading="lazy" decoding="async">
+                <span class="vitrine__nome">TaboãoPrev<span class="sr-only"> (abre o site em nova aba)</span></span>
+              </a>
+            </li>
+            <li class="vitrine__item vitrine__item--todos pilar__midia-item">
+              <a class="vitrine__link vitrine__todos" href="#projetos">Ver todos os projetos<svg aria-hidden="true"><use href="#i-right"/></svg></a>
+            </li>
+          </ul>
         </div>
       </article>
     </div>

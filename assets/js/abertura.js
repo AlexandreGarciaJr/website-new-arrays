@@ -213,21 +213,6 @@
   window.addEventListener("load", function () { if (ativo) { medir(); ultimo = -1; rodar(); } ligarSnap(); });
   aplicar();
 
-  /* ---------- janela de sites: os prints reais se revezam ---------- */
-  var tela = $("[data-janela]"), url = $("[data-janela-url]");
-  if (tela && !mq.reduzido.matches) {
-    var imgs = $$("img", tela), idx = 0, timer = 0;
-    var trocar = function () {
-      imgs[idx].classList.remove("ativa");
-      idx = (idx + 1) % imgs.length;
-      imgs[idx].classList.add("ativa");
-      if (url) url.textContent = imgs[idx].getAttribute("data-url") || "";
-    };
-    new IntersectionObserver(function (e) {
-      if (e[0].isIntersecting && !timer) timer = setInterval(trocar, 3200);
-      else if (!e[0].isIntersecting && timer) { clearInterval(timer); timer = 0; }
-    }).observe(tela);
-  }
 })();
 
 /* =========================================================
