@@ -229,3 +229,66 @@
     }).observe(tela);
   }
 })();
+
+/* =========================================================
+   Pilares: zoom flutuante no hover (desktop com mouse)
+   O pilar sob o mouse ganha ~62% da largura da grade e sobe sobre o
+   título, sem sair da tela. Calcula as margens negativas (CSS vars)
+   a partir do espaço real disponível: funciona em notebooks pequenos.
+   ========================================================= */
+(function () {
+  "use strict";
+  var grade = document.querySelector(".pilares__grade");
+  if (!grade) return;
+  var mq = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)");
+  var pilares = Array.prototype.slice.call(grade.querySelectorAll(".pilar"));
+  var ZOOM = { LARGURA: 0.62, LARGURA_MAX: 980, SUBIR_MAX: 140, MARGEM_TELA: 12 };
+  var ativo = null, tSai = 0;
+
+  function limpar(p) {
+    p.classList.remove("pilar--zoom");
+    ["--zl", "--zr", "--zt", "--zb"].forEach(function (v) { p.style.removeProperty(v); });
+  }
+  function ampliar(p) {
+    if (!mq.matches) return;
+    clearTimeout(tSai);
+    if (ativo && ativo !== p) limpar(ativo);
+    ativo = p;
+    // mede sem o zoom aplicado
+    var r = p.getBoundingClientRect(), g = grade.getBoundingClientRect();
+    var cs = getComputedStyle(grade);
+    var gl = g.left + parseFloat(cs.paddingLeft), gr = g.right - parseFloat(cs.paddingRight);
+    var alvoW = Math.min(ZOOM.LARGURA_MAX, (gr - gl) * ZOOM.LARGURA);
+    var extra = Math.max(0, alvoW - r.width);
+    var i = pilares.indexOf(p), zl = 0, zr = 0;
+    if (i === 0) zr = extra; else if (i === pilares.length - 1) zl = extra; else { zl = extra / 2; zr = extra / 2; }
+    // não passa das bordas da grade
+    zl = Math.min(zl, r.left - gl); zr = Math.min(zr, gr - r.right);
+    // vertical: sobe sobre o título (sem entrar no cabeçalho do site) e desce até perto do fim da tela
+    var topoH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--topo-h")) || 72;
+    var zt = Math.max(0, Math.min(ZOOM.SUBIR_MAX, r.top - topoH - ZOOM.MARGEM_TELA));
+    var zb = Math.max(0, Math.min(40, window.innerHeight - r.bottom - ZOOM.MARGEM_TELA));
+    p.style.setProperty("--zl", zl.toFixed(1) + "px");
+    p.style.setProperty("--zr", zr.toFixed(1) + "px");
+    p.style.setProperty("--zt", zt.toFixed(1) + "px");
+    p.style.setProperty("--zb", zb.toFixed(1) + "px");
+    p.classList.add("pilar--zoom");
+    grade.classList.add("tem-zoom");
+  }
+  function soltar() {
+    clearTimeout(tSai);
+    // pequena tolerância: passar de um pilar para outro não "pisca"
+    tSai = setTimeout(function () {
+      if (ativo) limpar(ativo);
+      ativo = null;
+      grade.classList.remove("tem-zoom");
+    }, 80);
+  }
+  pilares.forEach(function (p) {
+    p.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") ampliar(p); });
+  });
+  grade.addEventListener("pointerleave", soltar);
+  // rolou ou redimensionou com um pilar ampliado: desfaz (as medidas mudaram)
+  window.addEventListener("resize", soltar);
+  window.addEventListener("wheel", function () { if (ativo) soltar(); }, { passive: true });
+})();

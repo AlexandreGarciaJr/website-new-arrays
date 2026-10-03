@@ -180,3 +180,7 @@ Fica no começo do `<body>` do `index.html` (marcação, SVG do logo e script in
 - **Movimento reduzido ou sem JS:** sem loader.
 - **SVG do logo:** o `logo-full` foi separado em peças (colchete esquerdo, n, colchete direito, 3 letras de "new", 6 de "arrays" e 18 de "Experiência Digital"). Se o logo oficial mudar, gere as peças de novo a partir do novo SVG.
 - **Tempos:** no script inline, `VEL` multiplica as durações (`intro` 1,3 e `saida` 1,15; maior = mais lento) e `T.pausa` é o tempo com o logo pronto na tela antes da abertura (380 ms).
+
+## 12. Pilares: zoom no hover (desktop com mouse)
+
+O título da seção fica em uma linha no desktop. Ao passar o mouse sobre um pilar, ele cresce até cerca de 62% da largura da grade, sobe um pouco sobre o título e flutua à frente; os outros dois escurecem e recuam. O conteúdo se reorganiza no tamanho maior (não é escala), então imagens e textos ficam nítidos. As margens do zoom são calculadas pelo espaço real da tela, no fim de `assets/js/abertura.js` (objeto `ZOOM`: `LARGURA`, `LARGURA_MAX`, `SUBIR_MAX`, `MARGEM_TELA`). Testado em 1280 × 720, 1366 × 768 e 1440 × 900. Celular e tablet: sem zoom (os pilares já ficam empilhados e grandes).
