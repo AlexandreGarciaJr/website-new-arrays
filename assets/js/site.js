@@ -106,10 +106,22 @@
         credentials: "omit"
       }).then(function (res) {
         clearTimeout(tempo);
+        if (res.status === 422) {
+          // o servidor recusou algum campo (ex.: domínio de e-mail que não existe): volta ao formulário com o erro no lugar certo
+          return res.json().catch(function () { return {}; }).then(function (j) {
+            var e = falha("campos", 422); e.campos = (j && j.erros) || {}; throw e;
+          });
+        }
         if (!res.ok) throw falha(res.status >= 500 ? "servidor" : "recusado", res.status);
-        return res;
+        // sucesso só com a confirmação do servidor ({"ok":true}); erro de PHP ou página HTML não contam
+        return res.text().then(function (t) {
+          var j = null; try { j = JSON.parse(t); } catch (e) { /* resposta inválida */ }
+          if (!j || j.ok !== true) throw falha("servidor", res.status);
+          return j;
+        });
       }, function (err) {
         clearTimeout(tempo);
+        if (err && err.codigo) throw err;
         throw falha(err && err.name === "AbortError" ? "tempo_esgotado" : "rede");
       });
     }
@@ -322,18 +334,23 @@
     });
 
     function telefoneE164(tel) {
+      if (window.NA_validar) { var t = NA_validar.telefone(tel); if (t.e164) return t.e164; }
       var d = tel.replace(/\D/g, "");
       if (tel.trim().charAt(0) === "+") return "+" + d;
       return "+55" + d;
     }
 
+    // regras completas em assets/js/validacao.js (NA_validar); as de baixo são a reserva se aquele arquivo faltar
+    var VAL = window.NA_validar;
     var REGRAS = {
       nome: function (v) {
+        if (VAL) return VAL.nome(v).msg;
         if (!v) return "Informe seu nome completo.";
         if (v.split(" ").filter(function (p) { return p.length > 0; }).length < 2 || v.length < 5) return "Informe nome e sobrenome.";
         return "";
       },
       telefone: function (v) {
+        if (VAL) return VAL.telefone(v).msg;
         if (!v) return "Informe um telefone ou WhatsApp.";
         var d = v.replace(/\D/g, "");
         if (v.charAt(0) === "+") return d.length >= 8 && d.length <= 15 ? "" : "Confira o número com o código do país.";
@@ -343,12 +360,42 @@
         return d.length === 10 || d.length === 11 ? "" : "Confira o número informado.";
       },
       email: function (v) {
+        if (VAL) { var r = VAL.email(v); mostrarSugestao(r.sugestao); return r.msg || erroDominio(v); }
         if (!v) return "Informe seu e-mail.";
         return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? "" : "Confira o e-mail. Exemplo: nome@empresa.com.br";
       },
       consentimento: function (v) { return v ? "" : "Precisamos da sua autorização para entrar em contato."; }
     };
     var CAMPOS = { nome: "f-nome", telefone: "f-tel", email: "f-email", consentimento: "f-consent" };
+
+    /* e-mail: sugestão de correção ("gmial.com" → "gmail.com") e checagem do domínio no servidor (MX) */
+    var sugestaoEl = doc.getElementById("f-email-sugestao");
+    var sugestaoBt = sugestaoEl && sugestaoEl.querySelector("[data-sugestao]");
+    function mostrarSugestao(s) {
+      if (!sugestaoEl) return;
+      sugestaoEl.hidden = !s;
+      if (s) sugestaoBt.textContent = s;
+    }
+    if (sugestaoBt) sugestaoBt.addEventListener("click", function () {
+      form.email.value = sugestaoBt.textContent;
+      mostrarSugestao("");
+      validarCampo("email", true);
+      form.email.focus();
+    });
+    var dominiosRuins = {};
+    function erroDominio(v) {
+      var dom = (String(v).toLowerCase().split("@")[1] || "");
+      return dominiosRuins[dom] || "";
+    }
+    form.email.addEventListener("blur", function () {
+      var v = form.email.value.trim().toLowerCase();
+      if (!VAL || !CFG.verificarEmail || VAL.email(v).msg) return;
+      VAL.emailDominio(v, CFG.verificarEmail).then(function (r) {
+        var dom = v.split("@")[1];
+        if (!r.ok) dominiosRuins[dom] = r.msg; else delete dominiosRuins[dom];
+        if (form.email.value.trim().toLowerCase() === v) validarCampo("email", true);
+      });
+    });
 
     function validarCampo(nome, mostrar) {
       var v = valores();
@@ -520,6 +567,20 @@
 
     function falhar(err, v) {
       var codigo = (err && err.codigo) || "rede";
+      if (codigo === "campos" && err.campos && Object.keys(err.campos).length) {
+        // erro de um campo vindo do servidor: mostra no campo, não na tela de falha
+        var primeiro = null;
+        Object.keys(err.campos).forEach(function (nome) {
+          if (!CAMPOS[nome]) return;
+          if (nome === "email") dominiosRuins[(v.email.split("@")[1] || "")] = err.campos[nome];
+          var input = doc.getElementById(CAMPOS[nome]);
+          doc.getElementById(CAMPOS[nome] + "-erro").textContent = err.campos[nome];
+          input.setAttribute("aria-invalid", "true");
+          if (!primeiro) primeiro = input;
+        });
+        track("form_error", { form_name: CFG.formName, field_group: "envio", error_type: "campos_servidor" });
+        if (primeiro) { primeiro.focus(); return; }
+      }
       falhaMsg.textContent = MENSAGENS[codigo] || MENSAGENS.rede;
       waFallback.href = textoWhatsApp(v);
       track("form_error", { form_name: CFG.formName, field_group: "envio", error_type: codigo });

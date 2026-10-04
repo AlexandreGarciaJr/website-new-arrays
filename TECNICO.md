@@ -192,3 +192,7 @@ O título da seção fica em uma linha no desktop. Ao passar o mouse sobre um pi
 ## 14. Pilar "Criação de sites": vitrine
 
 O pilar mostra uma vitrine de sites reais (lista `.vitrine` no `index.html`). No card normal do desktop aparecem 3 sites empilhados (Silas Ferreira, GHM Finanças e danielsodre.com). Ao ampliar o pilar (hover), o primeiro site cresce em cima e os outros entram numa grade embaixo, com o atalho "Ver todos os projetos". No celular e no tablet, a vitrine já aparece nesse formato ampliado. Cada site abre em nova aba. Para trocar a ordem ou incluir um site, edite os itens `<li class="vitrine__item">` (os 3 primeiros são os do card normal).
+
+## 15. Formulário: e-mail (PHPMailer + Gmail) e planilha (Apps Script)
+
+O formulário envia para `api/lead.php` (configurado em `NA_CONFIG.leadEndpoint`). O PHP valida tudo de novo e depois faz duas coisas: manda o e-mail pelo SMTP do Gmail (PHPMailer, com senha de app) e grava a linha na planilha chamando o Apps Script pelo servidor. Envios repetidos são ignorados pelo ID, e há um limite de 5 envios por IP a cada 10 minutos. As senhas ficam em `na-config.php`, fora do `public_html` (modelo em `api/config.exemplo.php`). A validação do navegador fica em `assets/js/validacao.js` (`window.NA_validar`), e a verificação de domínio (MX) em `api/verificar-email.php`. Passo a passo completo (planilha, implantação, senha de app, HostGator, testes e problemas comuns) em `integracao/INTEGRACAO-FORMULARIO.md`.

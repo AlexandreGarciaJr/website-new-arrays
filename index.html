@@ -36,7 +36,8 @@
   /* Configuração editável. leadEndpoint: URL que recebe POST JSON (webhook, CRM, n8n, Make, Zapier ou API própria).
      Enquanto estiver vazio, o formulário NÃO simula sucesso: mostra um erro honesto com o atalho do WhatsApp. */
   window.NA_CONFIG = {
-    leadEndpoint: "",
+    leadEndpoint: "api/lead.php",                 // PHP na HostGator: e-mail (PHPMailer) + planilha (Apps Script)
+    verificarEmail: "api/verificar-email.php",    // confere se o domínio do e-mail recebe mensagens (MX)
     whatsapp: "5511995572722",
     email: "contato@newarrays.com",
     formName: "diagnostico_hero"
@@ -93,6 +94,7 @@
 <script src="assets/js/vendor/lenis.min.js" defer></script>
 <script src="assets/js/suave.js" defer></script>
 <script src="assets/js/sites-incriveis.js" defer></script>
+<script src="assets/js/validacao.js" defer></script>
 <script src="assets/js/site.js" defer></script>
 <script src="assets/js/tinta.js" defer></script>
 <script src="assets/js/movimento.js" defer></script>
@@ -413,7 +415,8 @@
             </div>
             <div class="campo">
               <label for="f-email">E-mail</label>
-              <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="f-email-erro" maxlength="160" spellcheck="false">
+              <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="f-email-erro f-email-sugestao" maxlength="160" spellcheck="false">
+              <p class="campo__sugestao" id="f-email-sugestao" aria-live="polite" hidden>Você quis dizer <button type="button" data-sugestao></button>?</p>
               <p class="campo__erro" id="f-email-erro"></p>
             </div>
             <div class="campo campo--check">

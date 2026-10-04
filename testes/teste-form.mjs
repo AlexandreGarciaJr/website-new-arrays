@@ -18,10 +18,10 @@ async function nova(vp, { endpoint = true } = {}) {
   const erros = [];
   p.on('pageerror', e => erros.push(e.message));
   p.on('console', m => { if (m.type() === 'error') erros.push(m.text()); });
-  if (endpoint) {
+  {
     await p.route(BASE, async route => {
       const r = await route.fetch(); let body = await r.text();
-      body = body.replace('leadEndpoint: ""', 'leadEndpoint: "/api/lead"');
+      body = body.replace(/leadEndpoint: "[^"]*"/, endpoint ? 'leadEndpoint: "/api/lead"' : 'leadEndpoint: ""').replace(/verificarEmail: "[^"]*"/, 'verificarEmail: ""');
       route.fulfill({ response: r, body });
     });
   }

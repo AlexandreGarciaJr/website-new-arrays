@@ -1,0 +1,6 @@
+# New Arrays | proteção da pasta api/
+Options -Indexes
+# só os dois endereços públicos podem ser chamados de fora
+<FilesMatch "^(?!lead\.php$|verificar-email\.php$).*$">
+  Require all denied
+</FilesMatch>

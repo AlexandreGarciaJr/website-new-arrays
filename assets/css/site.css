@@ -2358,3 +2358,12 @@ html.lenis, html.lenis:focus-within { scroll-behavior: auto !important; }
 @media (prefers-reduced-motion: reduce) {
   .pilar--zoom .vitrine__item:nth-child(n + 4) { animation: none; }
 }
+
+/* sugestão de correção do e-mail ("Você quis dizer ...?") */
+.campo__sugestao { margin-top: 6px; font-size: 0.875rem; color: var(--blue-200); }
+.campo__sugestao button {
+  font: inherit; font-weight: 700; color: var(--branco);
+  background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--blue-400); text-underline-offset: 3px;
+}
+.campo__sugestao button:hover, .campo__sugestao button:focus-visible { color: var(--blue-200); }

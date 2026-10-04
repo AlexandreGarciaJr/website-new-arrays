@@ -1,0 +1,13 @@
+[2026-10-04T18:04:18+00:00] email falhou (c7ac3a2f-86cb-46f4-b5a2-36b3f9c17bd0): Extension missing: openssl
+[2026-10-04T18:04:18+00:00] erro do PHP: Uncaught Error: Call to undefined function curl_init() in C:\Users\alexa\OneDrive\Projetos TI\new-arrays-site-v2.0\api\lead.php:115
+Stack trace:
+#0 C:\Users\alexa\OneDrive\Projetos TI\new-arrays-site-v2.0\api\lead.php(133): enviar_planilha(Array, Array)
+#1 {main}
+  thrown (lead.php:115)
+[2026-10-04T18:04:58+00:00] email falhou (c7ac3a2f-86cb-46f4-b5a2-36b3f9c17bd0): Extension missing: openssl
+[2026-10-04T18:04:58+00:00] erro do PHP: Uncaught Error: Call to undefined function curl_init() in C:\Users\alexa\OneDrive\Projetos TI\new-arrays-site-v2.0\api\lead.php:115
+Stack trace:
+#0 C:\Users\alexa\OneDrive\Projetos TI\new-arrays-site-v2.0\api\lead.php(133): enviar_planilha(Array, Array)
+#1 {main}
+  thrown (lead.php:115)
+[2026-10-04T18:10:42+00:00] planilha falhou (8b6b387b-c66a-4490-9dac-83f4b0de2a64): http 302 Operation timed out after 12943 milliseconds with 0 bytes received 
