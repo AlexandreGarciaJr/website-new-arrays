@@ -196,3 +196,43 @@ O pilar mostra uma vitrine de sites reais (lista `.vitrine` no `index.html`). No
 ## 15. Formulário: e-mail (PHPMailer + Gmail) e planilha (Apps Script)
 
 O formulário envia para `api/lead.php` (configurado em `NA_CONFIG.leadEndpoint`). O PHP valida tudo de novo e depois faz duas coisas: manda o e-mail pelo SMTP do Gmail (PHPMailer, com senha de app) e grava a linha na planilha chamando o Apps Script pelo servidor. Envios repetidos são ignorados pelo ID, e há um limite de 5 envios por IP a cada 10 minutos. As senhas ficam em `na-config.php`, fora do `public_html` (modelo em `api/config.exemplo.php`). A validação do navegador fica em `assets/js/validacao.js` (`window.NA_validar`), e a verificação de domínio (MX) em `api/verificar-email.php`. Passo a passo completo (planilha, implantação, senha de app, HostGator, testes e problemas comuns) em `integracao/INTEGRACAO-FORMULARIO.md`.
+
+## 16. Trabalhos reais: vídeos e posts do Instagram
+
+Arquivos em `assets/midia/`: vídeos MP4 H.264 verticais de 420 × 746, cada um com uma capa `.webp` do mesmo nome, mais as imagens dos carrosséis. Os vídeos são gravações de tela recortadas; o ícone de som do Instagram foi apagado.
+
+**Pilares ("Investir no digital precisa dar retorno.")**
+
+| Pilar | Peças |
+|---|---|
+| Redes sociais | Reels da Dra. Andréia, carrossel Sorriso em Dobro da Clin Quality e carrossel da Bruna Basilio (3 mil views) |
+| Tráfego pago | Print de conversas no WhatsApp, anônimo (nomes, telefones e a marca do cliente borrados), e Reels da Clin Quality que rodou no orgânico + anúncio, em **leque** |
+
+- Cada peça abre o post no Instagram, exceto o print, que fica sem link para manter o cliente anônimo.
+- Os vídeos dos pilares são mudos e cortados em 20 s.
+- Os carrosséis trocam de imagem a cada 2,6 s.
+- No leque do Tráfego, as duas peças ficam sobrepostas e inclinadas e trocam de lugar a cada 3,8 s (`MIDIA.LEQUE_MS` em `midia.js`). Um clique na peça de trás a traz para a frente. A troca automática para com o mouse em cima e no zoom, quando o leque abre e as duas peças ficam lado a lado.
+- No zoom (hover), a largura do pilar acompanha a altura, para as peças verticais aparecerem inteiras (`data-zoom-proporcao` no `<article>`).
+
+**Resultados**
+
+- São 4 vídeos com som, em grade de 4 colunas no desktop e trilho deslizante no tablet e no celular: Silas 400 mil views, Clin Quality +100 curtidas, Silas com filmmaker e o perfil da New Arrays.
+- Cada vídeo tem selo, legenda e o link "Ver no Instagram".
+- O alto-falante liga o som de um vídeo por vez, e o vídeo recomeça do início.
+- Enquanto um vídeo tem som, a música do site faz fade e pausa, e volta quando o som é desligado ou o vídeo sai da tela (evento `na:video-som`, ouvido pelo `dock.js`).
+- O card "Como o trabalho acontece" continua aguardando material.
+
+**Carregamento** (`assets/js/midia.js`)
+
+- Nada é baixado antes do fim do carregamento.
+- Cada vídeo só baixa e toca quando aparece na tela e pausa quando sai.
+- Na cena da abertura, os vídeos só tocam depois que os pilares entram.
+- Com "reduzir movimento" ou economia de dados, nada toca sozinho: aparece só a capa, e o alto-falante dá o play.
+
+**Para trocar um vídeo:** substitua o `.mp4` e o `.webp` de mesmo nome. Comando usado (o `delogo` apaga o ícone de som da gravação):
+
+```
+ffmpeg -i entrada.mp4 -vf "delogo=x=W-51:y=H-50:w=38:h=38,scale=420:746" -c:v libx264 -crf 25 -preset slow -movflags +faststart -c:a aac -b:a 96k saida.mp4
+```
+
+Troque W e H pela largura e altura do vídeo original.

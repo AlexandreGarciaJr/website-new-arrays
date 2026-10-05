@@ -101,6 +101,7 @@
 <script src="assets/js/dock.js" defer></script>
 <script src="assets/js/sfx.js" defer></script>
 <script src="assets/js/abertura.js" defer></script>
+<script src="assets/js/midia.js" defer></script>
 <script src="assets/js/pixels.js" defer></script>
 <script>
   /* decide ANTES da primeira pintura se a abertura vira cena presa (evita salto de layout) */
@@ -260,6 +261,8 @@
   <symbol id="i-warn" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z"/></symbol>
   <symbol id="i-pin" viewBox="0 0 256 256"><path d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.450-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"/></symbol>
   <symbol id="i-menu" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></symbol>
+  <symbol id="i-som" viewBox="0 0 256 256"><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol>
+  <symbol id="i-mudo" viewBox="0 0 256 256"><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm101.66-61.3a8,8,0,0,1-11.32,11.32L216,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32L204.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L216,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L227.31,128Z"/></symbol>
   <symbol id="i-video" viewBox="0 0 256 256"><path d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z"/></symbol>
   <symbol id="i-image" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z"/></symbol>
   <symbol id="i-chart" viewBox="0 0 256 256"><path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"/></symbol>
@@ -483,28 +486,61 @@
       <p class="pilares__lede">Por isso cuidamos de tudo o que leva o cliente até a sua empresa.</p>
     </div>
     <div class="pilares__grade">
-      <article class="pilar pilar--redes" aria-labelledby="pl-redes">
+      <article class="pilar pilar--redes" aria-labelledby="pl-redes" data-zoom-proporcao="0.96">
         <div class="pilar__cabeca">
           <svg class="pilar__icone" aria-hidden="true"><use href="#i-social"/></svg>
           <h3 id="pl-redes" class="pilar__titulo">Gestão de redes sociais</h3>
         </div>
         <p class="pilar__txt">Perfil organizado e ativo, com conteúdo que mostra o valor do que você vende e faz o cliente confiar.</p>
-        <div class="pilar__midia pilar__midia--redes" aria-hidden="true">
-          <span class="pilar__midia-item pilar__slot pilar__slot--reel" data-slot="Reels de cliente (9:16)"><svg><use href="#i-play"/></svg><small>Reels de cliente<br>9:16</small></span>
-          <span class="pilar__midia-item pilar__slot pilar__slot--reel" data-slot="Reels de cliente (9:16)"><svg><use href="#i-play"/></svg><small>Reels de cliente<br>9:16</small></span>
-          <span class="pilar__midia-item pilar__slot pilar__slot--post" data-slot="Post de produto (4:5)"><svg><use href="#i-image"/></svg><small>Post de produto<br>4:5</small></span>
+        <!-- trabalhos reais (Instagram): vídeo e carrosséis tocam sozinhos, sem som, só quando aparecem (assets/js/midia.js) -->
+        <div class="pilar__midia pilar__midia--redes">
+          <a class="pilar__midia-item peca peca--reel" href="https://www.instagram.com/reel/DYZ4xgouk-r/" target="_blank" rel="noopener">
+            <video class="peca__video" data-src="assets/midia/dra-andreia.mp4" poster="assets/midia/dra-andreia.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
+            <span class="peca__selo"><strong>Dra. Andréia</strong> Reels</span>
+            <span class="sr-only">Reels da Dra. Andréia (abre o Instagram em nova aba)</span>
+          </a>
+          <a class="pilar__midia-item peca peca--post" href="https://www.instagram.com/p/DYDglYvjdzt/" target="_blank" rel="noopener">
+            <span class="peca__galeria" data-galeria>
+              <img src="assets/midia/sorriso-em-dobro-1.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+              <img src="assets/midia/sorriso-em-dobro-2.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="peca__selo"><strong>Clin Quality</strong> Dia das Mães</span>
+            <span class="sr-only">Campanha Sorriso em Dobro, da Clin Quality, para o Dia das Mães (abre o Instagram em nova aba)</span>
+          </a>
+          <a class="pilar__midia-item peca peca--post" href="https://www.instagram.com/p/DcMwaaclN-i/" target="_blank" rel="noopener">
+            <span class="peca__galeria" data-galeria>
+              <img src="assets/midia/bruna-1.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+              <img src="assets/midia/bruna-2.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+              <img src="assets/midia/bruna-3.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+              <img src="assets/midia/bruna-4.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+              <img src="assets/midia/bruna-5.webp" width="592" height="740" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="peca__selo"><strong>Bruna Basilio</strong> 3 mil views</span>
+            <span class="sr-only">Carrossel da Bruna Basilio com 3 mil visualizações (abre o Instagram em nova aba)</span>
+          </a>
         </div>
       </article>
 
-      <article class="pilar pilar--trafego" aria-labelledby="pl-trafego">
+      <article class="pilar pilar--trafego" aria-labelledby="pl-trafego" data-zoom-proporcao="1.12">
         <div class="pilar__cabeca">
           <svg class="pilar__icone" aria-hidden="true"><use href="#i-target"/></svg>
           <h3 id="pl-trafego" class="pilar__titulo">Tráfego pago</h3>
         </div>
         <p class="pilar__txt">Anúncios que levam sua oferta a quem tem interesse e trazem leads (potenciais clientes) todos os meses.</p>
-        <div class="pilar__midia pilar__midia--trafego" aria-hidden="true">
-          <span class="pilar__midia-item pilar__slot pilar__slot--conversas" data-slot="Print de conversas no WhatsApp"><svg><use href="#i-whatsapp"/></svg><small>Print de conversas<br>no WhatsApp</small></span>
-          <span class="pilar__midia-item pilar__slot pilar__slot--grafico" data-slot="Print do gráfico de resultados"><svg><use href="#i-chart"/></svg><small>Print do gráfico<br>de resultados</small></span>
+        <div class="pilar__midia pilar__midia--trafego">
+          <!-- duas peças em leque: trocam de lugar sozinhas a cada poucos segundos e com um clique na de trás (assets/js/midia.js).
+               Cliente do print não identificado de propósito: nomes, telefones e marca borrados. -->
+          <div class="leque pilar__midia-item" data-leque>
+            <figure class="peca peca--print leque__peca" data-frente>
+              <img src="assets/midia/trafego-conversas.webp" width="640" height="1383" alt="Celular com a lista de conversas do WhatsApp cheia de novos contatos vindos de anúncios. Nomes e telefones ocultos." loading="lazy" decoding="async">
+              <figcaption class="peca__selo"><strong>Leads no WhatsApp</strong> cliente anônimo</figcaption>
+            </figure>
+            <a class="peca peca--reel leque__peca" href="https://www.instagram.com/p/DTdeE09EUEz/" target="_blank" rel="noopener">
+              <video class="peca__video" data-src="assets/midia/clin-organico-trafego.mp4" poster="assets/midia/clin-organico-trafego.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
+              <span class="peca__selo"><strong>Clin Quality</strong> orgânico + anúncio</span>
+              <span class="sr-only">Reels da Clin Quality que rodou no orgânico e no tráfego pago (abre o Instagram em nova aba)</span>
+            </a>
+          </div>
         </div>
       </article>
 
@@ -712,46 +748,66 @@
 <section class="resultados secao" id="resultados" aria-labelledby="resultados-titulo">
   <div class="secao__in">
     <h2 id="resultados-titulo" class="resultados__titulo" data-fx="subir">Resultados reais, contados por quem viveu.</h2>
-    <p class="resultados__intro" data-fx="subir" data-fx-atraso="100">Clientes falando da experiência, bastidores da execução e o trabalho entregue. Sem imagens geradas por inteligência artificial.</p>
+    <p class="resultados__intro" data-fx="subir" data-fx-atraso="100">Vídeos que produzimos para clientes e publicamos no Instagram, com os números de verdade. Os vídeos tocam sem som: toque no alto-falante para ouvir.</p>
 
     <!--
-      COMO PUBLICAR UM VÍDEO REAL: preencha data-video (MP4 H.264 leve, até ~8 MB, vertical 9:16),
-      data-poster (WebP 720x1280), data-nome e data-cargo, com autorização assinada.
-      Enquanto data-video estiver vazio, o card aparece como placeholder identificado.
+      VÍDEOS DE CLIENTES (assets/midia): MP4 H.264 vertical 9:16 (~420x746), com som, + capa .webp do mesmo nome.
+      Tocam sozinhos e mudos quando aparecem na tela; o botão de som liga o áudio de um vídeo por vez
+      e abaixa a música do site enquanto isso (assets/js/midia.js).
     -->
-    <div class="depoimentos" role="region" aria-label="Depoimentos em vídeo" tabindex="0">
-      <figure class="video-card" data-video="" data-poster="" data-nome="" data-cargo="">
-        <div class="video-card__midia">
-          <div class="video-card__vazio">
-            <svg aria-hidden="true"><use href="#i-video"/></svg>
-            <span>Depoimento em vídeo</span>
-            <small>Aguardando material do cliente</small>
-          </div>
+    <div class="reels" role="region" aria-label="Vídeos de clientes no Instagram" tabindex="0">
+      <figure class="reel">
+        <div class="reel__midia">
+          <video class="reel__video" data-src="assets/midia/silas-400k.mp4" poster="assets/midia/silas-400k.webp" muted loop playsinline preload="none" aria-label="Vídeo de Silas Ferreira: 400 mil views"></video>
+          <span class="reel__selo">400 mil views</span>
+          <button class="reel__som" type="button" aria-pressed="false" aria-label="Som do vídeo: Silas Ferreira, 400 mil views"><svg class="so-mudo" aria-hidden="true"><use href="#i-mudo"/></svg><svg class="so-som" aria-hidden="true"><use href="#i-som"/></svg></button>
+          <span class="reel__progresso" aria-hidden="true"><i></i></span>
         </div>
-        <figcaption class="video-card__legenda"><strong>Cliente 1</strong><span>Nome e segmento após autorização</span></figcaption>
+        <figcaption class="reel__legenda">
+          <strong>Silas Ferreira</strong>
+          <span>Reels que rodou no orgânico e no tráfego pago.</span>
+          <a class="reel__ig" href="https://www.instagram.com/reel/DVZR9mdkddu/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg>Ver no Instagram<span class="sr-only"> (Silas Ferreira, abre em nova aba)</span></a>
+        </figcaption>
       </figure>
-      <figure class="video-card" data-video="" data-poster="" data-nome="" data-cargo="">
-        <div class="video-card__midia">
-          <div class="video-card__vazio">
-            <svg aria-hidden="true"><use href="#i-video"/></svg>
-            <span>Depoimento em vídeo</span>
-            <small>Aguardando material do cliente</small>
-          </div>
+      <figure class="reel">
+        <div class="reel__midia">
+          <video class="reel__video" data-src="assets/midia/clin-100likes.mp4" poster="assets/midia/clin-100likes.webp" muted loop playsinline preload="none" aria-label="Vídeo de Clin Quality: +100 curtidas"></video>
+          <span class="reel__selo">+100 curtidas</span>
+          <button class="reel__som" type="button" aria-pressed="false" aria-label="Som do vídeo: Clin Quality, +100 curtidas"><svg class="so-mudo" aria-hidden="true"><use href="#i-mudo"/></svg><svg class="so-som" aria-hidden="true"><use href="#i-som"/></svg></button>
+          <span class="reel__progresso" aria-hidden="true"><i></i></span>
         </div>
-        <figcaption class="video-card__legenda"><strong>Cliente 2</strong><span>Nome e segmento após autorização</span></figcaption>
+        <figcaption class="reel__legenda">
+          <strong>Clin Quality</strong>
+          <span>Campanha Sorriso em Dobro, no Dia das Mães.</span>
+          <a class="reel__ig" href="https://www.instagram.com/p/DYF012DPN31/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg>Ver no Instagram<span class="sr-only"> (Clin Quality, abre em nova aba)</span></a>
+        </figcaption>
       </figure>
-      <figure class="video-card" data-video="" data-poster="" data-nome="" data-cargo="">
-        <div class="video-card__midia">
-          <div class="video-card__vazio">
-            <svg aria-hidden="true"><use href="#i-video"/></svg>
-            <span>Depoimento em vídeo</span>
-            <small>Aguardando material do cliente</small>
-          </div>
+      <figure class="reel">
+        <div class="reel__midia">
+          <video class="reel__video" data-src="assets/midia/silas-filmmaker.mp4" poster="assets/midia/silas-filmmaker.webp" muted loop playsinline preload="none" aria-label="Vídeo de Silas Ferreira: Gravação com filmmaker"></video>
+          <span class="reel__selo">Gravação com filmmaker</span>
+          <button class="reel__som" type="button" aria-pressed="false" aria-label="Som do vídeo: Silas Ferreira, Gravação com filmmaker"><svg class="so-mudo" aria-hidden="true"><use href="#i-mudo"/></svg><svg class="so-som" aria-hidden="true"><use href="#i-som"/></svg></button>
+          <span class="reel__progresso" aria-hidden="true"><i></i></span>
         </div>
-        <figcaption class="video-card__legenda"><strong>Cliente 3</strong><span>Nome e segmento após autorização</span></figcaption>
+        <figcaption class="reel__legenda">
+          <strong>Silas Ferreira</strong>
+          <span>Produção completa, do roteiro à edição.</span>
+          <a class="reel__ig" href="https://www.instagram.com/p/DUszV15jYet/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg>Ver no Instagram<span class="sr-only"> (Silas Ferreira, abre em nova aba)</span></a>
+        </figcaption>
       </figure>
-
-
+      <figure class="reel">
+        <div class="reel__midia">
+          <video class="reel__video" data-src="assets/midia/newarrays-reels.mp4" poster="assets/midia/newarrays-reels.webp" muted loop playsinline preload="none" aria-label="Vídeo de New Arrays: Nosso próprio perfil"></video>
+          <span class="reel__selo">Nosso próprio perfil</span>
+          <button class="reel__som" type="button" aria-pressed="false" aria-label="Som do vídeo: New Arrays, Nosso próprio perfil"><svg class="so-mudo" aria-hidden="true"><use href="#i-mudo"/></svg><svg class="so-som" aria-hidden="true"><use href="#i-som"/></svg></button>
+          <span class="reel__progresso" aria-hidden="true"><i></i></span>
+        </div>
+        <figcaption class="reel__legenda">
+          <strong>New Arrays</strong>
+          <span>O que fazemos pelos clientes, fazemos por nós.</span>
+          <a class="reel__ig" href="https://www.instagram.com/p/Dd7W7O_JZaV/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg>Ver no Instagram<span class="sr-only"> (New Arrays, abre em nova aba)</span></a>
+        </figcaption>
+      </figure>
     </div>
     <figure class="bastidores" data-video="" data-poster="" data-nome="Bastidores" data-cargo="">
       <div class="video-card__midia">

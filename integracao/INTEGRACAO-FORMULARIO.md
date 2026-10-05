@@ -47,7 +47,7 @@ api/lead.php  (HostGator)
    4. Em **Quem pode acessar**, escolha **Qualquer pessoa**.
    5. Clique em **Implantar** e autorize o acesso. Na tela "O Google não verificou este app", clique em **Avançado > Acessar (não seguro)**. Isso é normal porque o script é do próprio Sodré.
 6. Copie a URL que termina em `/exec`.
-7. Teste a URL abrindo-a no navegador. Ela deve responder `{"ok":true,...}` (é o doGet de teste). A aba "Leads Site" é criada sozinha no primeiro lead.
+7. Teste a URL abrindo-a no navegador. Ela deve responder `{"ok":true,...}` (é o doGet de teste). A aba "Leads - Site" é criada sozinha no primeiro lead.
 
 > Toda vez que alterar o código, use **Implantar > Gerenciar implantações > editar (lápis) > Versão: Nova versão**. Isso mantém a mesma URL. Se criar uma "Nova implantação", a URL muda e é preciso atualizar o `na-config.php`.
 

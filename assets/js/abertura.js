@@ -243,16 +243,23 @@
     var r = p.getBoundingClientRect(), g = grade.getBoundingClientRect();
     var cs = getComputedStyle(grade);
     var gl = g.left + parseFloat(cs.paddingLeft), gr = g.right - parseFloat(cs.paddingRight);
+    var topoH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--topo-h")) || 72;
+    var zt = Math.max(0, Math.min(ZOOM.SUBIR_MAX, r.top - topoH - ZOOM.MARGEM_TELA));
+    var zb = Math.max(0, Math.min(40, window.innerHeight - r.bottom - ZOOM.MARGEM_TELA));
     var alvoW = Math.min(ZOOM.LARGURA_MAX, (gr - gl) * ZOOM.LARGURA);
+    // pilares com vídeos e posts verticais: a largura acompanha a altura, para as peças
+    // aparecerem inteiras (data-zoom-proporcao = largura ÷ altura do conjunto de mídias)
+    var prop = parseFloat(p.getAttribute("data-zoom-proporcao"));
+    var midia = p.querySelector(".pilar__midia");
+    if (prop && midia) {
+      var m = midia.getBoundingClientRect();
+      alvoW = Math.min(alvoW, Math.max(r.width, (m.height + zt + zb) * prop + 12 + (r.width - m.width)));
+    }
     var extra = Math.max(0, alvoW - r.width);
     var i = pilares.indexOf(p), zl = 0, zr = 0;
     if (i === 0) zr = extra; else if (i === pilares.length - 1) zl = extra; else { zl = extra / 2; zr = extra / 2; }
     // não passa das bordas da grade
     zl = Math.min(zl, r.left - gl); zr = Math.min(zr, gr - r.right);
-    // vertical: sobe sobre o título (sem entrar no cabeçalho do site) e desce até perto do fim da tela
-    var topoH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--topo-h")) || 72;
-    var zt = Math.max(0, Math.min(ZOOM.SUBIR_MAX, r.top - topoH - ZOOM.MARGEM_TELA));
-    var zb = Math.max(0, Math.min(40, window.innerHeight - r.bottom - ZOOM.MARGEM_TELA));
     p.style.setProperty("--zl", zl.toFixed(1) + "px");
     p.style.setProperty("--zr", zr.toFixed(1) + "px");
     p.style.setProperty("--zt", zt.toFixed(1) + "px");

@@ -2,7 +2,9 @@
    New Arrays | Atalhos fixos (som + WhatsApp)
    SOM: LIGADO POR PADRÃO. O site tenta tocar assim que o loader abre;
    como os navegadores costumam bloquear áudio antes de um gesto, se for
-   bloqueado a música começa no primeiro clique, toque ou tecla da pessoa.
+   bloqueado a música começa na primeira interação da pessoa: clique, toque
+   ou tecla. Rolar a página também tenta, mas Chrome, Safari e Firefox não
+   contam rolagem como gesto (só liberam onde o site já tem "confiança").
    Quem desligar o som fica com ele desligado nas próximas visitas.
    O arquivo só é baixado depois do carregamento (não pesa no início).
    Liga com fade-in, desliga com fade-out, pausa com a aba oculta.
@@ -75,15 +77,45 @@
     else if (!document.hidden && pausadoPorAba) { pausadoPorAba = false; if (ligado) audio.play().catch(function () {}); }
   });
 
+  // um vídeo de cliente com som ligado (assets/js/midia.js): a música dá licença e volta depois
+  var pausadoPorVideo = false;
+  document.addEventListener("na:video-som", function (e) {
+    var videoComSom = e.detail && e.detail.ligado;
+    if (videoComSom && ligado && audio && !audio.paused) {
+      pausadoPorVideo = true;
+      fade(0, SOM.FADE_OUT, function () { if (pausadoPorVideo) audio.pause(); });
+    } else if (!videoComSom && pausadoPorVideo) {
+      pausadoPorVideo = false;
+      if (ligado && audio) { var p = audio.play(); if (p && p.catch) p.catch(function () {}); fade(SOM.VOLUME, SOM.FADE_IN); }
+    }
+  });
+
   // som ligado por padrão: tenta tocar quando o site abre; se o navegador bloquear,
   // começa no primeiro gesto da pessoa (clique, toque ou tecla)
+  // Navegadores só liberam áudio depois de um gesto "de verdade": clique, toque ou tecla.
+  // Rolagem (roda do mouse, barra, deslizar o dedo) NÃO conta para Chrome, Safari e Firefox;
+  // mesmo assim tentamos nela também: onde o navegador já confia no site, a música começa ao rolar.
+  // As tentativas continuam até a música tocar (uma falha não desarma as próximas).
   function armarGesto() {
-    var EV = ["pointerdown", "keydown", "touchend"];
-    var retomar = function (e) {
-      EV.forEach(function (n) { window.removeEventListener(n, retomar, true); });
-      if (!ligado && lerPref() && !btn.contains(e.target)) ligar(false);
+    var GESTOS = ["pointerdown", "pointerup", "click", "keydown", "touchend"];
+    var ROLAGEM = ["wheel", "scroll", "touchmove"];
+    var tentando = false;
+    var desarmar = function () {
+      GESTOS.forEach(function (n) { window.removeEventListener(n, retomar, true); });
+      ROLAGEM.forEach(function (n) { window.removeEventListener(n, retomar, true); });
     };
-    EV.forEach(function (n) { window.addEventListener(n, retomar, true); });
+    var retomar = function (e) {
+      if (ligado || !lerPref()) { desarmar(); return; }
+      if (tentando || (e.target && e.target.nodeType === 1 && btn.contains(e.target))) return;
+      tentando = true;
+      criar();
+      var p = audio.play();
+      var ok = function () { tentando = false; desarmar(); ligado = true; pintar(); fade(SOM.VOLUME, SOM.FADE_IN); };
+      var falhou = function () { setTimeout(function () { tentando = false; }, 250); };
+      if (p && p.then) p.then(ok, falhou); else ok();
+    };
+    GESTOS.forEach(function (n) { window.addEventListener(n, retomar, true); });
+    ROLAGEM.forEach(function (n) { window.addEventListener(n, retomar, { capture: true, passive: true }); });
   }
   function tentarTocar() {
     if (!lerPref() || ligado) return;

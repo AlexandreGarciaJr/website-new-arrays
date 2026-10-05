@@ -1505,10 +1505,16 @@ input, select, textarea { font: inherit; }
 }
 .projeto__seguidor svg { width: 16px; height: 16px; }
 .projeto:hover .projeto__seguidor { scale: 1; }
+/* no hover, o "Visitar site" do texto some (quem aparece é o seguidor do cursor).
+   Some só a cor, e não o link inteiro: opacity no link criaria uma camada própria e a
+   área clicável (::after, que cobre o card todo) ficaria por baixo da imagem. */
 @media (hover: hover) and (pointer: fine) {
-  .projeto:hover .projeto__link { opacity: 0; }
+  .projeto:hover .projeto__link { color: transparent; }
+  .projeto:hover .projeto__link svg { opacity: 0; }
 }
-.projeto__link { transition: opacity 0.3s ease; }
+.projeto__link { transition: color 0.3s ease; }
+.projeto__link svg { transition: opacity 0.3s ease, transform 0.25s var(--ease-out); }
+.projeto__link::after { z-index: 3; }
 
 /* ---------- Vídeos: colchetes fecham no hover ---------- */
 .video-card__midia { transition: outline-color 0.4s ease; outline: 1px solid transparent; outline-offset: 6px; }
@@ -2294,7 +2300,7 @@ html.lenis, html.lenis:focus-within { scroll-behavior: auto !important; }
   .pilares__grade.tem-zoom .pilar:not(.pilar--zoom) { opacity: 0.32; transform: scale(0.97); filter: saturate(0.4); }
   .pilar--zoom .pilar__txt { max-width: 56ch; }
   /* no tráfego ampliado, os dois prints ficam lado a lado (mais quadrados, mais legíveis) */
-  .pilar--trafego.pilar--zoom .pilar__midia--trafego { grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; }
+  .pilar--trafego.pilar--zoom .pilar__midia--trafego { grid-template-rows: 1fr; grid-template-columns: 4.6fr 5.6fr; }
   .pilar__midia--trafego { transition: grid-template-columns 0.5s var(--ease-out); }
 }
 
@@ -2367,3 +2373,152 @@ html.lenis, html.lenis:focus-within { scroll-behavior: auto !important; }
   text-decoration: underline; text-decoration-color: var(--blue-400); text-underline-offset: 3px;
 }
 .campo__sugestao button:hover, .campo__sugestao button:focus-visible { color: var(--blue-200); }
+
+/* =========================================================
+   TRABALHOS REAIS NOS PILARES (vídeo, carrossel e print)
+   assets/js/midia.js liga os vídeos e passa os carrosséis só quando estão na tela
+   ========================================================= */
+.peca { position: relative; display: block; min-height: 0; background: #0b1416; border: 1px solid rgb(255 255 255 / 0.08); color: inherit; text-decoration: none; isolation: isolate; }
+.peca video, .peca img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.peca--print { margin: 0; background: #fff; }
+.peca--print img { object-position: 50% 6%; }
+.peca__galeria img { opacity: 0; transition: opacity 0.9s ease; }
+.peca__galeria img:first-child, .peca__galeria img.ativa { opacity: 1; }
+.peca__galeria.rodando img:first-child:not(.ativa) { opacity: 0; }
+.peca::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgb(5 12 14 / 0.82), transparent 42%); pointer-events: none; }
+.peca__selo {
+  position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 2;
+  display: grid; gap: 1px;
+  font-size: 0.6875rem; line-height: 1.25; color: rgb(255 255 255 / 0.78);
+}
+.peca__selo strong { font-size: 0.8125rem; color: #fff; font-weight: 700; }
+a.peca { transition: border-color 0.3s ease; }
+a.peca:hover, a.peca:focus-visible { border-color: var(--blue-400); }
+a.peca video, a.peca img { transition: transform 0.8s var(--ease-out); }
+a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
+
+/* redes: Reels alto à esquerda, dois posts empilhados à direita */
+.pilar__midia--redes { grid-template-columns: 9fr 6.4fr; grid-template-rows: 1fr 1fr; }
+.pilar__midia--redes > :nth-child(1) { grid-row: 1 / -1; height: 100%; }
+.pilar__midia--redes > :nth-child(2), .pilar__midia--redes > :nth-child(3) { height: 100%; align-self: stretch; }
+/* tráfego: print e Reels em leque (sobrepostos, inclinados); trocam de lugar sozinhos (midia.js) */
+.pilar__midia--trafego { display: block; }
+.leque { position: relative; height: 100%; overflow: visible; border-radius: 0; }
+.leque__peca {
+  position: absolute;
+  width: auto;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 28px 56px -18px rgb(0 0 0 / 0.85);
+  transition: top 0.7s var(--ease-out), height 0.7s var(--ease-out), transform 0.7s var(--ease-out), filter 0.5s ease, z-index 0s 0.25s;
+}
+.peca--print.leque__peca { left: 0; top: 18%; height: 82%; aspect-ratio: 640 / 1383; transform: rotate(-5deg); }
+.peca--reel.leque__peca { right: 0; top: 0; height: 90%; aspect-ratio: 9 / 16; transform: rotate(3.5deg); }
+/* quem está atrás: um pouco menor e mais escuro; quem está na frente: por cima */
+.leque__peca:not([data-frente]) { z-index: 1; transform: rotate(var(--giro, 0deg)) scale(0.94); filter: brightness(0.55) saturate(0.8); cursor: pointer; }
+.leque__peca[data-frente] { z-index: 2; }
+.peca--print.leque__peca { --giro: -5deg; }
+.peca--reel.leque__peca { --giro: 3.5deg; }
+.leque__peca:not([data-frente]) .peca__selo { opacity: 0; }
+.leque__peca .peca__selo { transition: opacity 0.4s ease; }
+.leque__peca:not([data-frente]):hover { filter: brightness(0.75); }
+
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  /* ampliado: Reels + dois posts lado a lado, bem maiores */
+  .pilar--zoom .peca__selo { left: 12px; bottom: 12px; font-size: 0.8125rem; }
+  .pilar--zoom .peca__selo strong { font-size: 0.9375rem; }
+  /* ampliado: o leque abre e as duas peças ficam lado a lado, inteiras */
+  .pilar--zoom .leque__peca { top: 0; height: 100%; transform: none; filter: none; }
+  .pilar--zoom .leque__peca .peca__selo { opacity: 1; }
+}
+
+/* =========================================================
+   RESULTADOS: vídeos de clientes (9:16, grandes e legíveis)
+   ========================================================= */
+.reels {
+  position: relative;
+  margin-top: clamp(40px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 24px);
+  align-items: start;
+}
+.reel { position: relative; margin: 0; }
+.reel:nth-child(even) { margin-top: clamp(24px, 4vw, 56px); }
+.reel__midia {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  max-height: calc(100svh - 170px);
+  margin-inline: auto;
+  border-radius: var(--r-painel);
+  overflow: hidden;
+  background: #0b1416;
+  outline: 1px solid rgb(255 255 255 / 0.08);
+  outline-offset: -1px;
+  transition: outline-color 0.4s ease, outline-offset 0.4s ease;
+}
+.reel:hover .reel__midia, .reel.com-som .reel__midia { outline-color: rgb(64 173 189 / 0.6); }
+.reel__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+.reel__selo {
+  position: absolute; top: 16px; left: 12px; right: 62px; justify-self: start; width: max-content; max-width: calc(100% - 74px); z-index: 1;
+  padding: 5px 11px;
+  border-radius: var(--r-pilula);
+  background: rgb(5 12 14 / 0.72);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgb(64 173 189 / 0.45);
+  color: #fff; font-size: 0.8125rem; font-weight: 700; line-height: 1.3;
+  pointer-events: none;
+}
+.reel__som {
+  position: absolute; right: 10px; top: 10px; z-index: 1;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background: rgb(5 12 14 / 0.66);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s var(--ease-out), border-color 0.25s ease;
+}
+.reel__som:hover { transform: scale(1.06); border-color: var(--blue-400); }
+.reel__som svg { width: 20px; height: 20px; }
+.reel__som .so-som, .reel__som[aria-pressed="true"] .so-mudo { display: none; }
+.reel__som[aria-pressed="true"] .so-som { display: block; }
+.reel__som[aria-pressed="true"] { background: var(--acao); color: var(--bw-900); border-color: transparent; }
+.reel__progresso { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgb(255 255 255 / 0.12); z-index: 1; }
+.reel__progresso i { display: block; height: 100%; width: 100%; background: var(--blue-400); transform: scaleX(0); transform-origin: 0 50%; }
+.reel__legenda { display: grid; gap: 3px; margin-top: 14px; }
+.reel__legenda strong { font-weight: 700; font-size: 1.0625rem; }
+.reel__legenda > span { color: var(--tinta-suave); font-size: 0.9375rem; line-height: 1.4; }
+.reel__ig {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 6px;
+  color: var(--blue-300); font-size: 0.875rem; font-weight: 600;
+  text-decoration: underline; text-decoration-color: rgb(64 173 189 / 0.4); text-underline-offset: 3px;
+}
+.reel__ig:hover { color: #fff; text-decoration-color: currentColor; }
+.reel__ig svg { width: 16px; height: 16px; }
+
+@media (max-width: 1023px) {
+  .reels {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(240px, 42%);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .reels::-webkit-scrollbar { display: none; }
+  .reels:focus-visible { outline-offset: -2px; }
+  .reel { scroll-snap-align: start; }
+  .reel:nth-child(even) { margin-top: 0; }
+}
+@media (max-width: 639px) {
+  .reels { grid-auto-columns: 74%; }
+}

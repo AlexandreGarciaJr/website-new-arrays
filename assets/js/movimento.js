@@ -284,7 +284,7 @@
     });
 
     /* ---- Resultados: vídeos surgem por recorte ---- */
-    var midias = $$(".video-card, .bastidores");
+    var midias = $$(".reel, .bastidores");
     gsap.set(midias, { clipPath: "inset(14% 8% 14% 8% round 16px)" });
     ST.batch(midias, {
       start: "top 88%",
