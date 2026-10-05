@@ -1,0 +1,31 @@
+# =========================================================
+# New Arrays | o que NUNCA vai para o GitHub
+# =========================================================
+
+# --- senhas e chaves do formulário (Gmail, token da planilha) ---
+na-config.php
+**/na-config.php
+*/na-config.php
+api/config.php
+.env
+.env.*
+
+# --- dados gerados pelo formulário no servidor ---
+# (logs de erro, IDs dos envios e limite por IP; a pasta e o .htaccess ficam)
+api/dados/*
+!api/dados/.htaccess
+*.log
+
+# --- dependências e arquivos temporários ---
+node_modules/
+vendor/
+*.tmp
+*.bak
+*.swp
+
+# --- sistema operacional e editores ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
