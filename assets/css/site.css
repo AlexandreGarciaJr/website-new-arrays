@@ -2598,11 +2598,9 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
 .cena-bast .bastidores__palco {
   position: sticky; top: 0; height: 100vh; height: 100dvh;
   max-width: none; padding: calc(var(--topo-h) + 2.5vh) max(var(--gutter), calc((100vw - var(--largura)) / 2)) 3.5vh;
-  grid-template-rows: auto minmax(0, 1fr) auto; align-content: stretch; overflow: clip;
+  grid-template-rows: auto minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr); align-content: stretch; overflow: clip;
 }
 .cena-bast .bastidores__titulo { font-size: clamp(1.9rem, 0.8rem + 2.7vw, 3.6rem); }
-.cena-bast .bastidores__tela { align-self: center; height: 100%; width: auto; max-width: 100%; aspect-ratio: 16 / 9; }
-.cena-bast .bastidores__moldura { height: 100%; }
 /* Projetos entra por cima da saída dos bastidores, no mesmo lugar (sem a página descer) */
 .cena-bast .projetos { margin-top: -100vh; z-index: 2; pointer-events: none; }
 .cena-bast .projetos .fx-palco > * { pointer-events: auto; }
@@ -2730,3 +2728,71 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
 .servicos-deck .servicos__grade { position: relative; z-index: 1; }
 .servicos__titulo .pal-m { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.16em 0 0.06em; margin: -0.16em 0 -0.06em; } /* espaço para os acentos (Ê) não serem cortados */
 .servicos__titulo .pal-m > span { display: inline-block; }
+
+/* =========================================================
+   RESULTADOS NO CELULAR E NO TABLET (html.reels-pilha, < 1024 px)
+   Carrossel vertical: palco preso, Reels empilhados; a rolagem troca o vídeo (movimento.js)
+   ========================================================= */
+.reels-pilha .resultados { height: 400vh; padding: 0; overflow-x: clip; }
+.reels-pilha .resultados > .secao__in {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: flex; flex-direction: column;
+  padding-top: calc(var(--topo-h) + 1.5vh); padding-bottom: 2.5vh;
+}
+.reels-pilha .resultados__titulo { font-size: clamp(1.6rem, 1rem + 3.4vw, 2.6rem); max-width: 20ch; }
+.reels-pilha .resultados__intro { margin-top: 8px; font-size: 0.875rem; line-height: 1.45; }
+.reels-pilha .reels {
+  position: relative; flex: 1 1 auto; min-height: 0; margin: 14px 0 0; padding: 0;
+  display: block; overflow: visible; scroll-snap-type: none;
+}
+.reels-pilha .reel {
+  position: absolute; inset: 0; margin: 0 !important;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center;
+  transform-origin: 50% 100%;
+}
+.reels-pilha .reel__midia { height: 100%; width: auto; max-width: 100%; max-height: none; aspect-ratio: 9 / 16; }
+.reels-pilha .reel__legenda { margin-top: 10px; text-align: center; justify-items: center; gap: 2px; max-width: min(100%, 520px); }
+@media (max-width: 639px) { .reels-pilha .reel__legenda { max-width: calc(100% - 136px); } } /* não passa por baixo dos botões fixos */
+.reels-pilha .reel__legenda > span { font-size: 0.875rem; }
+.reels-pilha .reel__ig { justify-self: center; }
+.reels-pilha .reel::before, .reels-pilha .reel::after { display: none; }
+/* contador "01 / 04" + pontinhos, na lateral */
+.reels__contador { display: none; }
+.reels-pilha .reels__contador {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 5;
+  font-family: ui-monospace, Menlo, monospace; font-size: 0.75rem; color: var(--bw-200);
+  writing-mode: vertical-rl;
+}
+.reels__num b { color: #fff; font-weight: 600; }
+.reels__pontos { display: flex; gap: 8px; }
+.reels__pontos i { width: 6px; height: 6px; border-radius: 50%; background: rgb(255 255 255 / 0.25); transition: background 0.3s ease, transform 0.3s ease; }
+.reels__pontos i.on { background: var(--blue-400); transform: scale(1.5); }
+@media (max-width: 479px) { .reels-pilha .reels__contador { right: -6px; } }
+
+/* Bastidores: a tela 16:9 cabe no espaço livre do palco em qualquer proporção (tablet incluso) */
+.bastidores__janela { display: grid; place-items: center; min-width: 0; min-height: 0; }
+.cena-bast .bastidores__janela { container-type: size; height: 100%; }
+.cena-bast .bastidores__tela { width: min(100cqw, 100cqh * 16 / 9); height: auto; max-width: none; }
+
+/* convite para ouvir: em cima do botão (não cobre o conteúdo) e some depois de alguns segundos */
+.dock--convite .dock__som .dock__rotulo {
+  right: -9px; top: auto; bottom: calc(100% + 18px); transform: none;
+  animation: convite-entra 0.6s var(--ease-out) 1.6s backwards, convite-sai 0.6s ease 11s forwards;
+}
+@keyframes convite-entra { from { opacity: 0; transform: translateY(8px); } }
+@keyframes convite-sai { to { opacity: 0; transform: translateY(6px); } }
+
+/* rodapé: a última linha não fica por baixo dos botões fixos */
+.rodape__base { padding-right: max(var(--gutter), 104px); }
+
+/* baralho das Três frentes: a aba de cada carta aparece quando ela está atrás */
+.servico__aba { display: none; }
+.servicos-deck .servico__aba {
+  display: flex; gap: 10px; align-items: center; position: absolute; top: 12px; left: clamp(28px, 3.4vw, 48px); right: 24px;
+  font-family: ui-monospace, Menlo, monospace; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgb(255 255 255 / 0.75); opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
+}
+.servicos-deck .servico__aba b { color: var(--blue-300); font-weight: 600; }
+.servicos-deck .servicos[data-etapa="1"] .fx-etapa:not(:nth-of-type(1)) .servico__aba,
+.servicos-deck .servicos[data-etapa="2"] .fx-etapa:nth-of-type(3) .servico__aba { opacity: 1; }

@@ -304,3 +304,33 @@ O GSAP 3.12 incorpora essas propriedades no `transform` ao animar um elemento e 
 
 - o card de Projetos não pode ter o `transform` animado, senão o foco do carrossel (feito com `scale`) congela. A entrada dos cards agora usa recorte e o texto de dentro;
 - o zoom de entrada dos Reels usa a variável `--z` em vez de `scale`, para o zoom do hover continuar funcionando.
+
+## 20. Resultados no celular e no tablet: carrossel vertical
+
+Abaixo de 1024 px (`html.reels-pilha`, em `movimento.js`):
+
+- Resultados fica preso na tela (400vh) com os 4 Reels empilhados no mesmo lugar.
+- Rolar para baixo troca o vídeo, como nos stories: o atual sobe, encolhe, gira de leve e some; o próximo nasce de baixo com uma cortina.
+- As legendas não se cruzam: a de saída some logo, a de entrada aparece no fim.
+- Na lateral ficam o contador "01 / 04" e os pontinhos.
+- Só o vídeo da frente toca: `midia.js` ouve o evento `na:reel-ativo`. Se o vídeo que sai estava com som, o som é desligado.
+- No celular, a legenda é mais estreita para não passar por baixo dos botões fixos de som e WhatsApp.
+- No desktop (1024 px ou mais), a fusão dos Reels nos Bastidores continua como antes.
+
+## 21. QA visual (Playwright) e correções
+
+**O que foi testado**
+
+- Varredura da página inteira em 320, 375, 430, 768, 1024, 1280, 1440 e 1903 px, mais "reduzir movimento" em 375 e 1440.
+- Em cada uma: erros de console, falhas de rede, rolagem lateral, imagens quebradas e âncoras.
+- Também: menu do celular, links do menu, redimensionamento, formulário e acessibilidade (axe).
+
+**O que foi corrigido**
+
+1. **Bastidores no tablet:** o texto e o vídeo saíam pela direita. A tela 16:9 agora fica dentro de `.bastidores__janela`, que mede o espaço livre (unidades `cqw`/`cqh`).
+2. **Capa do vídeo dos Bastidores:** era um quadro preto; agora é o quadro de 10 s.
+3. **Convite para ouvir:** fica acima do botão de som, sem cobrir o conteúdo, e some sozinho após cerca de 11 s.
+4. **Girar o tablet ou redimensionar a janela para outra faixa** (celular < 768, tablet < 1024, desktop): a página recarrega sem o loader e volta para a mesma seção (`site.js`, chave `na-volta` no `sessionStorage`).
+5. **Links do menu:** quem cuida deles agora é o `suave.js`. Ao chegar, o destino é medido de novo e corrigido, porque o Fluxo cresce durante a viagem e o "Resultados" parava 249 px antes.
+6. **Rodapé:** a última linha ganhou espaço à direita para não ficar por baixo dos botões fixos.
+7. **Baralho das Três frentes:** as cartas de trás mostram uma aba com o número e o nome ("02 Tráfego pago"), em vez de faixas vazias.

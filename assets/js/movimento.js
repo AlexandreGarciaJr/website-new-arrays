@@ -308,7 +308,12 @@
       ];
       var SAI = { y: -130, scale: 0.97, rotationX: 58, autoAlpha: 0, filter: "brightness(1.1)", zIndex: 4 };
       var conteudo = function (c) { return $$(".servico__icone, .servico__titulo, .servico__lead, .servico__lead + p, .servico__itens li, .btn", c); };
-      cartas.forEach(function (c, i) { gsap.set(c, POS[i]); if (i) gsap.set(conteudo(c), { autoAlpha: 0, y: 24 }); });
+      cartas.forEach(function (c, i) {
+        var aba = doc.createElement("span"); aba.className = "servico__aba"; aba.setAttribute("aria-hidden", "true");
+        aba.innerHTML = "<b>0" + (i + 1) + "</b>" + c.querySelector(".servico__titulo").textContent;
+        c.appendChild(aba);
+        gsap.set(c, POS[i]); if (i) gsap.set(conteudo(c), { autoAlpha: 0, y: 24 });
+      });
 
       gsap.timeline({ scrollTrigger: { trigger: serv, start: "top 80%", end: "top top", scrub: 0.8 } })
         .fromTo(serv.querySelectorAll(".pal-m > span"), { yPercent: 110 }, { yPercent: 0, stagger: 0.06, duration: 0.5, ease: "power3.out" }, 0)
@@ -402,8 +407,58 @@
       gsap.set(moldura, { autoAlpha: 0 });
     }
 
+    /* ---- Resultados no celular e no tablet (< 1024 px): carrossel vertical ----
+       A seção fica presa na tela com os 4 Reels empilhados no mesmo lugar. Rolar para baixo
+       troca o vídeo: o atual sobe, encolhe e some; o próximo nasce de baixo com uma cortina,
+       como nos stories. Contador "01 / 04" e pontinhos mostram onde a pessoa está.
+       Só o vídeo da frente toca (midia.js ouve "na:reel-ativo"). */
+    var pilha = !!(res && reels.length > 1 && window.innerWidth < 1024);
+    if (pilha) {
+      doc.documentElement.classList.add("reels-pilha");
+      var caixa = res.querySelector(".reels");
+      var cont = doc.createElement("div");
+      cont.className = "reels__contador"; cont.setAttribute("aria-hidden", "true");
+      cont.innerHTML = '<span class="reels__num"><b>01</b> / ' + ("0" + reels.length).slice(-2) + '</span><span class="reels__pontos">' + reels.map(function () { return "<i></i>"; }).join("") + "</span>";
+      caixa.appendChild(cont);
+      var numEl = cont.querySelector("b"), pontos = $$("i", cont), atual = -1;
+      var marcar = function (i) {
+        if (i === atual) return;
+        atual = i;
+        reels.forEach(function (r, k) { r.classList.toggle("reel--ativo", k === i); r.setAttribute("aria-hidden", k === i ? "false" : "true"); });
+        pontos.forEach(function (p, k) { p.classList.toggle("on", k === i); });
+        numEl.textContent = ("0" + (i + 1)).slice(-2);
+        doc.dispatchEvent(new CustomEvent("na:reel-ativo"));
+      };
+      reels.forEach(function (r, i) {
+        if (i) {
+          gsap.set(r, { yPercent: 70, scale: 0.9, rotation: 5, autoAlpha: 0 });
+          gsap.set(r.querySelector(".reel__midia"), { clipPath: "inset(100% 0% 0% 0% round 16px)" });
+          gsap.set(r.querySelector(".reel__legenda"), { autoAlpha: 0, y: 14 });
+        }
+      });
+      marcar(0);
+      var passos = reels.length - 1;
+      var tlP = gsap.timeline({ scrollTrigger: { trigger: res, start: "top top", end: "bottom bottom", scrub: 0.6,
+        onUpdate: function (st) { marcar(Math.min(reels.length - 1, Math.round(st.progress * passos))); } } });
+      for (var k = 0; k < passos; k++) {
+        var t = k + 0.25;
+        tlP.to(reels[k], { yPercent: -18, scale: 0.86, rotation: -4, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, t)
+           .to(reels[k + 1], { yPercent: 0, scale: 1, rotation: 0, autoAlpha: 1, duration: 0.55, ease: "power3.out" }, t + 0.05)
+           .to(reels[k + 1].querySelector(".reel__midia"), { clipPath: "inset(0% 0% 0% 0% round 16px)", duration: 0.5, ease: "power3.out" }, t + 0.05)
+           // as legendas não se cruzam: a de saída some logo, a de entrada aparece no fim
+           .to(reels[k].querySelector(".reel__legenda"), { autoAlpha: 0, y: -10, duration: 0.15 }, t)
+           .to(reels[k + 1].querySelector(".reel__legenda"), { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.38);
+      }
+      tlP.to({}, { duration: 0.25 });
+      // entrada (antes de prender): o primeiro Reel sobe com a cortina
+      gsap.timeline({ scrollTrigger: { trigger: res, start: "top 85%", end: "top top", scrub: 0.6 } })
+        .fromTo(reels[0], { yPercent: 25, rotation: -3 }, { yPercent: 0, rotation: 0, duration: 1, ease: "power3.out" }, 0)
+        .fromTo(reels[0].querySelector(".reel__midia"), { clipPath: "inset(100% 0% 0% 0% round 16px)" }, { clipPath: "inset(0% 0% 0% 0% round 16px)", duration: 0.8, ease: "power3.inOut" }, 0)
+        .fromTo(cont, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.7);
+    }
+
     /* ---- Resultados sem a fusão (tablet): vídeos sobem de baixo, cada coluna no seu ritmo ---- */
-    if (reels.length) {
+    if (reels.length && !pilha) {
       var desloc = [140, 220, 170, 250], giro = [-4, 3, -3, 4];
       var tlR = gsap.timeline({ scrollTrigger: cenaRes
         ? { trigger: res, start: "top 92%", end: "top top", scrub: 0.9 }

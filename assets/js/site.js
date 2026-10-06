@@ -695,4 +695,44 @@
     if (a.hasAttribute("data-wa-pos")) track("contact_whatsapp", { cta_position: a.getAttribute("data-wa-pos"), destination: "whatsapp" });
     else if (a.href && a.href.indexOf("mailto:") === 0) track("click_email", { cta_position: a.getAttribute("data-email-pos") || "" });
   });
+
+  /* ---------- Troca de faixa de tela: recarrega no mesmo ponto ----------
+     As cenas de rolagem são montadas para a largura em que a página abriu (celular < 768,
+     tablet < 1024, desktop). Ao girar o tablet ou redimensionar a janela para outra faixa,
+     a página recarrega sem o loader e volta para a mesma seção. */
+  function faixa() {
+    var w = window.innerWidth;
+    if (w < 768) return "c";
+    if (w < 1024) return "t";
+    return window.innerHeight >= 600 ? "d" : "d-baixo";
+  }
+  var faixaInicial = faixa(), tFaixa = 0;
+  window.addEventListener("resize", function () {
+    clearTimeout(tFaixa);
+    tFaixa = setTimeout(function () {
+      if (faixa() === faixaInicial) return;
+      var secoes = $$("body > section, main > section, body > div > section"), meio = window.innerHeight / 2, ref = null;
+      // a última que cobre o meio da tela é a que está por cima (cenas se sobrepõem)
+      secoes.forEach(function (sec) { var r = sec.getBoundingClientRect(); if (sec.id && r.top <= meio && r.bottom >= meio) ref = { id: sec.id, f: (meio - r.top) / r.height }; });
+      try { sessionStorage.setItem("na-volta", JSON.stringify(ref || { y: window.scrollY })); } catch (e) {}
+      location.reload();
+    }, 450);
+  });
+  // voltou de uma recarga dessas: espera as cenas montarem e rola até o ponto salvo
+  var volta = null;
+  try { volta = JSON.parse(sessionStorage.getItem("na-volta") || "null"); sessionStorage.removeItem("na-volta"); } catch (e) {}
+  if (volta) {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    var tentativas = 0;
+    (function esperar() {
+      var pronto = doc.documentElement.classList.contains("gsap-pronto") || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!pronto && tentativas++ < 40) return setTimeout(esperar, 150);
+      setTimeout(function () {
+        if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        var sec = volta.id && doc.getElementById(volta.id);
+        var y = sec ? sec.getBoundingClientRect().top + window.scrollY + sec.offsetHeight * volta.f - window.innerHeight / 2 : (volta.y || 0);
+        if (window.NA_rolar) NA_rolar(Math.max(0, y), false); else window.scrollTo(0, Math.max(0, y));
+      }, 400);
+    })();
+  }
 })();

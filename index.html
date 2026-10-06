@@ -108,7 +108,8 @@
   (function () {
     var m = function (q) { return window.matchMedia(q).matches; };
     // loader: só com movimento liberado; segurança: some sozinho em 6 s se algo travar
-    if (!m("(prefers-reduced-motion: reduce)")) {
+    var recarga = false; try { recarga = !!sessionStorage.getItem("na-volta"); } catch (e) {}
+    if (!m("(prefers-reduced-motion: reduce)") && !recarga) {
       document.documentElement.classList.add("com-ld", "carregando");
       setTimeout(function () { var l = document.getElementById("ld"); if (l) l.remove(); document.documentElement.classList.remove("com-ld", "carregando"); }, 6000);
     }
@@ -831,16 +832,18 @@
       </div>
     </div>
 
-    <a class="bastidores__tela" href="https://www.youtube.com/watch?v=wAyeaioIry0" target="_blank" rel="noopener" aria-label="Vídeo de bastidores da New Arrays: assistir completo no YouTube (abre em nova aba)">
-      <span class="bastidores__moldura">
-        <video class="bastidores__video" data-src="assets/midia/showcase.mp4" poster="assets/midia/showcase.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
-        <span class="bastidores__rec" aria-hidden="true"><i></i>REC <span data-timecode>00:00:00</span></span>
-        <span class="bastidores__rotulo" aria-hidden="true">New Arrays · Showcase</span>
-        <span class="bastidores__cursor" aria-hidden="true"><svg><use href="#i-play"/></svg>Ver no YouTube</span>
-      </span>
-      <span class="bastidores__canto bastidores__canto--a" aria-hidden="true"></span>
-      <span class="bastidores__canto bastidores__canto--b" aria-hidden="true"></span>
-    </a>
+    <div class="bastidores__janela">
+      <a class="bastidores__tela" href="https://www.youtube.com/watch?v=wAyeaioIry0" target="_blank" rel="noopener" aria-label="Vídeo de bastidores da New Arrays: assistir completo no YouTube (abre em nova aba)">
+        <span class="bastidores__moldura">
+          <video class="bastidores__video" data-src="assets/midia/showcase.mp4" poster="assets/midia/showcase.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
+          <span class="bastidores__rec" aria-hidden="true"><i></i>REC <span data-timecode>00:00:00</span></span>
+          <span class="bastidores__rotulo" aria-hidden="true">New Arrays · Showcase</span>
+          <span class="bastidores__cursor" aria-hidden="true"><svg><use href="#i-play"/></svg>Ver no YouTube</span>
+        </span>
+        <span class="bastidores__canto bastidores__canto--a" aria-hidden="true"></span>
+        <span class="bastidores__canto bastidores__canto--b" aria-hidden="true"></span>
+      </a>
+    </div>
 
     <ol class="bastidores__etapas" aria-label="Etapas do trabalho">
       <li><span>01</span>Diagnóstico</li>
@@ -952,7 +955,7 @@
       <h2 id="sobre-titulo" class="sobre__titulo" data-fx="subir">Criamos estruturas digitais novas, organizadas e prontas para crescer.</h2>
       <p data-fx="subir" data-fx-atraso="100">O nome vem da programação. <em>New</em> é o comando que cria algo novo e reserva espaço para ele existir. <em>Array</em> é um conjunto organizado de elementos. É o que fazemos com a presença digital de cada cliente.</p>
       <p data-fx="subir" data-fx-atraso="160">A New Arrays começou com desenvolvimento de sites, em 2022, e hoje conecta comunicação, atração e conversão. O fundador, Daniel Sodré Basilio, atua com tecnologia desde 2015, com passagens por Fatec, Etec, Hospital Israelita Albert Einstein e Accenture.</p>
-      <p class="sobre__local" data-fx="subir" data-fx-atraso="220"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>Somos de Embu das Artes e atendemos negócios de qualquer lugar do mundo.</span></p>
+      <p class="sobre__local" data-fx="subir" data-fx-atraso="220"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>Somos de Embu das Artes - SP e atendemos negócios de qualquer lugar do mundo.</span></p>
     </div>
   </div>
   </div>

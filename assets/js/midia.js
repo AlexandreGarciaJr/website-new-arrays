@@ -31,7 +31,9 @@
 
   var itens = []; // { el, tipo: "video"|"galeria", visivel, ativo }
   function reavaliar(item) {
-    var deve = item.visivel && pilaresLiberados(item.el) && !doc.hidden;
+    var deve = item.visivel && pilaresLiberados(item.el) && !doc.hidden &&
+      // celular/tablet: os Reels ficam empilhados e só o da frente toca (movimento.js marca .reel--ativo)
+      !(item.reel && doc.documentElement.classList.contains("reels-pilha") && !item.reel.classList.contains("reel--ativo"));
     if (deve === item.ativo) return;
     item.ativo = deve;
     if (item.tipo === "video") {
@@ -199,6 +201,7 @@
       new MutationObserver(reavaliarTodos).observe(abertura, { attributes: true, attributeFilter: ["class"] });
     }
     doc.addEventListener("visibilitychange", reavaliarTodos);
+    doc.addEventListener("na:reel-ativo", reavaliarTodos);
     reavaliarTodos();
   }
   if (doc.readyState === "complete") iniciar();
