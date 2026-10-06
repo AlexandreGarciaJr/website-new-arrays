@@ -99,23 +99,33 @@
   function armarGesto() {
     var GESTOS = ["pointerdown", "pointerup", "click", "keydown", "touchend"];
     var ROLAGEM = ["wheel", "scroll", "touchmove"];
-    var tentando = false;
+    var tentandoRolagem = false, ultimaRolagem = 0;
     var desarmar = function () {
-      GESTOS.forEach(function (n) { window.removeEventListener(n, retomar, true); });
-      ROLAGEM.forEach(function (n) { window.removeEventListener(n, retomar, true); });
+      GESTOS.forEach(function (n) { window.removeEventListener(n, porGesto, true); });
+      ROLAGEM.forEach(function (n) { window.removeEventListener(n, porRolagem, true); });
     };
-    var retomar = function (e) {
-      if (ligado || !lerPref()) { desarmar(); return; }
-      if (tentando || (e.target && e.target.nodeType === 1 && btn.contains(e.target))) return;
-      tentando = true;
+    var tocar = function () {
       criar();
       var p = audio.play();
-      var ok = function () { tentando = false; desarmar(); ligado = true; pintar(); fade(SOM.VOLUME, SOM.FADE_IN); };
-      var falhou = function () { setTimeout(function () { tentando = false; }, 250); };
-      if (p && p.then) p.then(ok, falhou); else ok();
+      var ok = function () { if (ligado) return; desarmar(); ligado = true; pintar(); fade(SOM.VOLUME, SOM.FADE_IN); };
+      if (p && p.then) return p.then(ok); ok(); return Promise.resolve();
     };
-    GESTOS.forEach(function (n) { window.addEventListener(n, retomar, true); });
-    ROLAGEM.forEach(function (n) { window.addEventListener(n, retomar, { capture: true, passive: true }); });
+    // clique, toque ou tecla: tenta SEMPRE (é o que o navegador aceita como gesto)
+    var porGesto = function (e) {
+      if (ligado || !lerPref()) { desarmar(); return; }
+      if (e.target && e.target.nodeType === 1 && btn.contains(e.target)) return; // o botão de som cuida de si
+      tocar().catch(function () {});
+    };
+    // rolagem: no máximo uma tentativa por segundo (a rolagem suave dispara muitos eventos)
+    var porRolagem = function () {
+      if (ligado || !lerPref()) { desarmar(); return; }
+      var agora = Date.now();
+      if (tentandoRolagem || agora - ultimaRolagem < 1000) return;
+      ultimaRolagem = agora; tentandoRolagem = true;
+      tocar().catch(function () {}).then(function () { tentandoRolagem = false; });
+    };
+    GESTOS.forEach(function (n) { window.addEventListener(n, porGesto, true); });
+    ROLAGEM.forEach(function (n) { window.addEventListener(n, porRolagem, { capture: true, passive: true }); });
   }
   function tentarTocar() {
     if (!lerPref() || ligado) return;
