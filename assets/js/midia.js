@@ -134,6 +134,38 @@
     });
   });
 
+  /* ---------- Bastidores: timecode do REC + etiqueta "Ver no YouTube" que segue o cursor ---------- */
+  var tela = doc.querySelector(".bastidores__tela");
+  if (tela) {
+    var vB = tela.querySelector("video"), tc = tela.querySelector("[data-timecode]"), cur = tela.querySelector(".bastidores__cursor");
+    var dois = function (n) { return (n < 10 ? "0" : "") + n; };
+    if (vB && tc) vB.addEventListener("timeupdate", function () {
+      var t = Math.floor(vB.currentTime), f = Math.floor((vB.currentTime % 1) * 30);
+      tc.textContent = dois(Math.floor(t / 60)) + ":" + dois(t % 60) + ":" + dois(f);
+    });
+    if (cur && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      tela.addEventListener("pointermove", function (e) {
+        var r = tela.getBoundingClientRect();
+        cur.style.left = (e.clientX - r.left) / (r.width / tela.offsetWidth) + "px";
+        cur.style.top = (e.clientY - r.top) / (r.height / tela.offsetHeight) + "px";
+      });
+    }
+  }
+
+  /* ---------- Resultados: inclinação 3D e brilho seguindo o mouse ---------- */
+  if (!quieto && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    doc.querySelectorAll(".reel__midia").forEach(function (m) {
+      m.addEventListener("pointermove", function (e) {
+        var r = m.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        m.style.setProperty("--ry", ((x - 0.5) * 10).toFixed(2) + "deg");
+        m.style.setProperty("--rx", ((0.5 - y) * 8).toFixed(2) + "deg");
+        m.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+        m.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+      });
+      m.addEventListener("pointerleave", function () { m.style.setProperty("--rx", "0deg"); m.style.setProperty("--ry", "0deg"); });
+    });
+  }
+
   /* ---------- liga tudo depois do carregamento ---------- */
   function iniciar() {
     if (quieto) return; // só a capa; o botão de som dá o play (vídeos dos resultados)

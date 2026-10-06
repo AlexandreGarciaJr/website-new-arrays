@@ -236,3 +236,71 @@ ffmpeg -i entrada.mp4 -vf "delogo=x=W-51:y=H-50:w=38:h=38,scale=420:746" -c:v li
 ```
 
 Troque W e H pela largura e altura do vídeo original.
+
+## 17. Resultados, Bastidores e a passagem para Projetos
+
+**Resultados**
+
+- Os 4 vídeos entram com a rolagem (scrub, em `movimento.js`): uma cortina abre de baixo para cima, o card sobe girando levemente para o lugar e o vídeo de dentro "assenta" (zoom de 1,35 para 1). Cada coluna entra num ritmo diferente.
+- Depois que entram, as colunas pares andam um pouco mais devagar (paralaxe).
+- No hover, o card inclina em 3D seguindo o mouse, ganha um brilho que acompanha o cursor e colchetes nos cantos, o vídeo amplia de leve e o botão de som pulsa. A inclinação e o brilho ficam em `midia.js`.
+
+**Bastidores (`#bastidores`, seção própria entre Resultados e Projetos)**
+
+- O vídeo `assets/midia/showcase.mp4` (720p, sem som, cerca de 5 MB, capa `showcase.webp`) toca em loop quando aparece. O clique abre o vídeo completo no YouTube.
+- No hover, o vídeo amplia, os colchetes se afastam e uma etiqueta "Ver no YouTube" segue o cursor.
+- O indicador REC mostra o tempo do vídeo.
+- Embaixo do vídeo ficam 6 etapas do processo.
+- No tablet e no desktop (`html.cena-bast`, a partir de 768 px), a seção vira cena presa de 320vh:
+  1. o título sobe linha a linha e o vídeo cresce de uma janela recortada até ocupar o palco;
+  2. as etapas acendem uma a uma;
+  3. na saída, os colchetes se afastam, o vídeo fecha numa faixa fina e some, e título e etapas sobem.
+- No celular e com "reduzir movimento", é uma seção comum: vídeo, texto e etapas empilhados, com todas as etapas acesas.
+
+**Passagem para Projetos sem a página descer**
+
+- Com a cena ativa, Projetos tem `margin-top: -100vh`: ela gruda no topo exatamente quando a cena dos Bastidores termina.
+- O conteúdo de Projetos fica invisível enquanto sobe "por baixo" da cena.
+- Projetos ganha +55vh de altura (355vh). Nesse trecho o título se revela, o texto aparece e os cards entram girando da direita. Só depois o trilho horizontal começa a andar.
+
+**Gatilhos de rolagem**
+
+Um `ResizeObserver` recalcula todos os gatilhos (`ScrollTrigger.refresh`) quando a altura da página muda, por exemplo quando o Fluxo cresce ao aparecer. Sem isso, as cenas abaixo disparavam no lugar errado.
+
+**Leque do Tráfego ampliado**
+
+No zoom, as duas peças ficam centralizadas com um vão fixo de 18 px em qualquer proporção de tela. Elas usam unidades do contêiner (`cqh`/`cqw`): a altura se ajusta para as duas caberem lado a lado.
+
+## 18. Fusão Resultados → Bastidores e convite para ouvir
+
+**"Quatro vídeos viram um"** (desktop a partir de 1024 px, `html.cena-res`, em `movimento.js`)
+
+- Resultados fica preso na tela por 2 telas de rolagem. A primeira parte é só para assistir e ligar o som.
+- Depois, o título e as legendas saem e os 4 Reels deslizam até virar 4 fatias lado a lado de um painel 16:9, exatamente no lugar onde está o vídeo dos Bastidores. As posições são medidas a cada recálculo, então funciona em qualquer tela.
+- O painel dissolve no vídeo de bastidores, que também é um mosaico, e o título, o texto, os colchetes e as etapas se montam em volta.
+- Bastidores tem `margin-top: -160vh`: ele sobe por baixo, invisível, e as duas cenas ficam presas ao mesmo tempo por 60vh, que é o trecho da troca. Por isso a página não "desce".
+- Se um Reel estava com som, o som é desligado antes da fusão.
+- No tablet, cada seção tem a sua cena; no celular e com "reduzir movimento", a rolagem é comum.
+
+**Música**
+
+- A escolha de desligar o som agora vale só para a visita (`sessionStorage`). Na próxima visita a música volta ligada.
+- A preferência antiga, guardada para sempre em `localStorage`, é apagada ao abrir o site.
+- Quando o navegador bloqueia o som até o primeiro clique (regra do Chrome, Safari e Firefox para sites novos), aparece ao lado do botão de som o convite "Clique em qualquer lugar para ouvir" (no celular: "Toque na tela para ouvir"), com o botão pulsando. O primeiro clique, toque ou tecla em qualquer lugar liga a música.
+
+## 19. Três frentes em baralho 3D e o foco do carrossel
+
+**Três frentes** (desktop a partir de 1024 px, `html.servicos-deck`, em `movimento.js`)
+
+- **Entrada:** o título sobe palavra por palavra (máscara), os verbos da conexão entram pela esquerda e o baralho sobe inclinado e assenta.
+- **Cena presa:** as 3 cartas ficam empilhadas em profundidade, e as de trás aparecem por cima, menores e mais escuras. Na rolagem, a carta da frente vira para trás como uma folha de calendário, a próxima avança e o conteúdo dela entra em sequência.
+- **Fundo:** o número gigante (01 → 02 → 03) gira como um contador, e "Comunicar · Atrair · Converter" passa ao fundo em letras vazadas.
+- As trocas terminam antes de 1/3 e 2/3 da cena, então quando o `data-etapa` muda (o que acende a conexão à esquerda), a carta nova já está na frente. Só a carta da frente recebe cliques.
+- No celular e no tablet, a troca simples continua como antes.
+
+**Cuidado com GSAP e as propriedades CSS `scale`/`translate`**
+
+O GSAP 3.12 incorpora essas propriedades no `transform` ao animar um elemento e as zera. Por isso:
+
+- o card de Projetos não pode ter o `transform` animado, senão o foco do carrossel (feito com `scale`) congela. A entrada dos cards agora usa recorte e o texto de dentro;
+- o zoom de entrada dos Reels usa a variável `--z` em vez de `scale`, para o zoom do hover continuar funcionando.

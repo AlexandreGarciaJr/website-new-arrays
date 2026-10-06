@@ -17,7 +17,7 @@
   if (!AC) return;
 
   var ctx = null, saida = null, eco = null;
-  function ligadoPref() { try { return localStorage.getItem(SFX.CHAVE) !== "0"; } catch (e) { return true; } }
+  function ligadoPref() { try { return sessionStorage.getItem(SFX.CHAVE) !== "0"; } catch (e) { return true; } }
 
   function montar() {
     if (ctx) return ctx;

@@ -630,6 +630,8 @@
       </div>
 
       <div class="servicos__palco">
+        <!-- número gigante que gira como um contador quando a carta da frente muda (só desktop, movimento.js) -->
+        <div class="servicos__num" aria-hidden="true"><span class="servicos__num-fita"><span>01</span><span>02</span><span>03</span></span></div>
         <article class="fx-etapa servico" id="servico-redes" aria-labelledby="sr-t">
           <svg class="servico__icone" aria-hidden="true"><use href="#i-social"/></svg>
           <h3 id="sr-t" class="servico__titulo">Gestão de redes sociais</h3>
@@ -673,6 +675,8 @@
         </article>
       </div>
     </div>
+    <!-- eco: os três verbos passam ao fundo, devagar, conforme a rolagem -->
+    <div class="servicos__eco" aria-hidden="true"><span>Comunicar · Atrair · Converter · Comunicar · Atrair · Converter ·</span></div>
   </div>
 </section>
 
@@ -809,19 +813,43 @@
         </figcaption>
       </figure>
     </div>
-    <figure class="bastidores" data-video="" data-poster="" data-nome="Bastidores" data-cargo="">
-      <div class="video-card__midia">
-        <div class="video-card__vazio">
-          <svg aria-hidden="true"><use href="#i-video"/></svg>
-          <span>Bastidores da execução</span>
-          <small>Gravações, reuniões e entregas reais em breve</small>
-        </div>
+  </div>
+</section>
+
+<!-- ============ BASTIDORES: como o trabalho acontece (cena presa; assets/js/movimento.js) ============
+     O vídeo toca sem som e em loop; o clique abre o vídeo completo no YouTube.
+     Na rolagem: o vídeo cresce, as etapas do processo acendem uma a uma e a cena some
+     para "Projetos entregues" entrar no mesmo lugar, sem a página descer. -->
+<section class="bastidores" id="bastidores" aria-labelledby="bastidores-titulo">
+  <div class="bastidores__palco">
+    <div class="bastidores__cabeca">
+      <p class="bastidores__kicker"><span aria-hidden="true">[</span> bastidores <span aria-hidden="true">]</span></p>
+      <h2 id="bastidores-titulo" class="bastidores__titulo"><span class="bt__linha"><span>Como o trabalho</span></span> <span class="bt__linha"><span>acontece.</span></span></h2>
+      <div class="bastidores__lado">
+        <p class="bastidores__intro">Diagnóstico, roteiro, gravação, edição, publicação e leitura de dados. Mostramos o processo, não só o resultado final.</p>
+        <a class="bastidores__yt" href="https://www.youtube.com/watch?v=wAyeaioIry0" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg>Assistir completo no YouTube<span class="sr-only"> (abre em nova aba)</span></a>
       </div>
-      <figcaption class="bastidores__txt">
-        <strong>Como o trabalho acontece</strong>
-        <span>Diagnóstico, gravação, criação, publicação e leitura de dados. Mostramos o processo, não só o resultado final.</span>
-      </figcaption>
-    </figure>
+    </div>
+
+    <a class="bastidores__tela" href="https://www.youtube.com/watch?v=wAyeaioIry0" target="_blank" rel="noopener" aria-label="Vídeo de bastidores da New Arrays: assistir completo no YouTube (abre em nova aba)">
+      <span class="bastidores__moldura">
+        <video class="bastidores__video" data-src="assets/midia/showcase.mp4" poster="assets/midia/showcase.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
+        <span class="bastidores__rec" aria-hidden="true"><i></i>REC <span data-timecode>00:00:00</span></span>
+        <span class="bastidores__rotulo" aria-hidden="true">New Arrays · Showcase</span>
+        <span class="bastidores__cursor" aria-hidden="true"><svg><use href="#i-play"/></svg>Ver no YouTube</span>
+      </span>
+      <span class="bastidores__canto bastidores__canto--a" aria-hidden="true"></span>
+      <span class="bastidores__canto bastidores__canto--b" aria-hidden="true"></span>
+    </a>
+
+    <ol class="bastidores__etapas" aria-label="Etapas do trabalho">
+      <li><span>01</span>Diagnóstico</li>
+      <li><span>02</span>Roteiro</li>
+      <li><span>03</span>Gravação</li>
+      <li><span>04</span>Edição</li>
+      <li><span>05</span>Publicação</li>
+      <li><span>06</span>Leitura de dados</li>
+    </ol>
   </div>
 </section>
 

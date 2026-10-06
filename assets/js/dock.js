@@ -5,7 +5,7 @@
    bloqueado a música começa na primeira interação da pessoa: clique, toque
    ou tecla. Rolar a página também tenta, mas Chrome, Safari e Firefox não
    contam rolagem como gesto (só liberam onde o site já tem "confiança").
-   Quem desligar o som fica com ele desligado nas próximas visitas.
+   Quem desligar o som fica sem som até o fim da visita; na próxima, a música volta ligada.
    O arquivo só é baixado depois do carregamento (não pesa no início).
    Liga com fade-in, desliga com fade-out, pausa com a aba oculta.
    Volume e duração dos fades: objeto SOM abaixo.
@@ -21,8 +21,11 @@
   var audio = null, ligado = false, fadeRaf = 0;
 
   // padrão: ligado; só fica desligado se a pessoa desligou antes
-  function lerPref() { try { return localStorage.getItem(SOM.CHAVE) !== "0"; } catch (e) { return true; } }
-  function salvarPref(v) { try { localStorage.setItem(SOM.CHAVE, v ? "1" : "0"); } catch (e) { /* sem armazenamento: tudo bem */ } }
+  // a escolha de desligar vale só para esta visita (sessionStorage): na próxima, a música volta ligada.
+  // Limpa a preferência antiga, que ficava guardada para sempre (localStorage) e deixava o site mudo.
+  try { localStorage.removeItem(SOM.CHAVE); } catch (e) {}
+  function lerPref() { try { return sessionStorage.getItem(SOM.CHAVE) !== "0"; } catch (e) { return true; } }
+  function salvarPref(v) { try { sessionStorage.setItem(SOM.CHAVE, v ? "1" : "0"); } catch (e) { /* sem armazenamento: tudo bem */ } }
   function track(ev, dados) { if (window.dataLayer) window.dataLayer.push(Object.assign({ event: ev }, dados || {})); }
 
   function criar() {
@@ -67,7 +70,7 @@
     fade(0, SOM.FADE_OUT, function () { if (!ligado) audio.pause(); });
   }
 
-  btn.addEventListener("click", function () { if (ligado) desligar(true); else ligar(true); });
+  btn.addEventListener("click", function () { dock.classList.remove("dock--convite"); if (ligado) desligar(true); else ligar(true); });
 
   // aba oculta: pausa; voltou: continua de onde parou
   var pausadoPorAba = false;
@@ -96,7 +99,13 @@
   // Rolagem (roda do mouse, barra, deslizar o dedo) NÃO conta para Chrome, Safari e Firefox;
   // mesmo assim tentamos nela também: onde o navegador já confia no site, a música começa ao rolar.
   // As tentativas continuam até a música tocar (uma falha não desarma as próximas).
+  // Enquanto o navegador segura o som, um convite aparece ao lado do botão
+  function convite(mostrar) {
+    dock.classList.toggle("dock--convite", mostrar);
+    if (rotulo) rotulo.textContent = mostrar ? (window.matchMedia("(hover: none)").matches ? "Toque na tela para ouvir" : "Clique em qualquer lugar para ouvir") : (ligado ? "Desligar som" : "Ligar som");
+  }
   function armarGesto() {
+    convite(true);
     var GESTOS = ["pointerdown", "pointerup", "click", "keydown", "touchend"];
     var ROLAGEM = ["wheel", "scroll", "touchmove"];
     var tentandoRolagem = false, ultimaRolagem = 0;
@@ -107,7 +116,7 @@
     var tocar = function () {
       criar();
       var p = audio.play();
-      var ok = function () { if (ligado) return; desarmar(); ligado = true; pintar(); fade(SOM.VOLUME, SOM.FADE_IN); };
+      var ok = function () { if (ligado) return; desarmar(); ligado = true; convite(false); pintar(); fade(SOM.VOLUME, SOM.FADE_IN); };
       if (p && p.then) return p.then(ok); ok(); return Promise.resolve();
     };
     // clique, toque ou tecla: tenta SEMPRE (é o que o navegador aceita como gesto)

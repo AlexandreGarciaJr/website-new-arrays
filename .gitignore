@@ -5,7 +5,6 @@
 # --- senhas e chaves do formulário (Gmail, token da planilha) ---
 na-config.php
 **/na-config.php
-*/na-config.php
 api/config.php
 .env
 .env.*
