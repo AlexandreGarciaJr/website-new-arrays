@@ -2855,7 +2855,7 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
 .pilar__midia--trafego { display: grid !important; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; }
 .pilar__midia--trafego > .peca { min-height: 0; height: auto; }
 .pilar__midia--trafego > .peca--print img { object-position: 50% 8%; }
-.pilar__midia--trafego > .peca--painel { grid-column: 1 / -1; margin: 0; aspect-ratio: 1640 / 600; background: #1e2a33; }
+.pilar__midia--trafego > .peca--painel { grid-column: 1 / -1; margin: 0; aspect-ratio: 1640 / 841; background: #1e2a33; } /* imagem inteira, sem corte */
 .pilar__midia--trafego > .peca--painel img { object-fit: cover; object-position: top left; }
 @media (max-width: 1023px) {
   .pilar__midia--trafego { height: auto !important; grid-template-rows: auto auto; }
