@@ -334,3 +334,13 @@ Abaixo de 1024 px (`html.reels-pilha`, em `movimento.js`):
 5. **Links do menu:** quem cuida deles agora é o `suave.js`. Ao chegar, o destino é medido de novo e corrigido, porque o Fluxo cresce durante a viagem e o "Resultados" parava 249 px antes.
 6. **Rodapé:** a última linha ganhou espaço à direita para não ficar por baixo dos botões fixos.
 7. **Baralho das Três frentes:** as cartas de trás mostram uma aba com o número e o nome ("02 Tráfego pago"), em vez de faixas vazias.
+
+## 22. Notebooks de tela baixa
+
+Vale para telas com largura a partir de 1024 px e altura até 760 px: `@media (min-width: 1024px) and (max-height: 760px)`, no fim do `site.css`. Telas normais e grandes não mudam.
+
+- **Pilar "Criação de sites":** o card mostra 2 sites em vez de 3. Ampliado, mostra 1 site grande e 2 embaixo, em vez de 1 + 5 e o link "Ver todos".
+- **Três frentes:** a carta da frente é mais compacta e o palco desce, então as abas das cartas de trás ficam visíveis.
+- **Resultados:** os vídeos usam a altura disponível e ficam juntos e centralizados, sem buracos entre as colunas. A descrição some; ficam o nome e o "Ver no Instagram". A fusão com os Bastidores continua alinhada.
+- **Bastidores:** o texto e as etapas (em 2 colunas) vão para a esquerda e o vídeo fica grande à direita.
+- **Projetos:** os cards ficam mais baixos e há um respiro de 10vh antes da cena do notebook.

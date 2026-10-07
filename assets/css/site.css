@@ -2796,3 +2796,64 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
 .servicos-deck .servico__aba b { color: var(--blue-300); font-weight: 600; }
 .servicos-deck .servicos[data-etapa="1"] .fx-etapa:not(:nth-of-type(1)) .servico__aba,
 .servicos-deck .servicos[data-etapa="2"] .fx-etapa:nth-of-type(3) .servico__aba { opacity: 1; }
+
+/* =========================================================
+   NOTEBOOKS DE TELA BAIXA (largura ≥ 1024 px e altura ≤ 760 px)
+   Tudo o que fica preso na tela ganha um arranjo mais compacto,
+   para nada ficar fino, pequeno ou encostado. Telas normais não mudam.
+   ========================================================= */
+@media (min-width: 1024px) and (max-height: 760px) {
+  /* 1. Pilar "Criação de sites": 2 sites no card; ampliado, 1 grande + 2 embaixo */
+  .pilar--sites .vitrine { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+  .pilar--sites .vitrine__item:nth-child(n + 3) { display: none; }
+  .pilar--zoom .vitrine { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1.55fr) minmax(0, 1fr); }
+  .pilar--zoom .vitrine__item:first-child { grid-column: 1 / -1; }
+  .pilar--zoom .vitrine__item:nth-child(-n + 3) { display: block; }
+  .pilar--zoom .vitrine__item:nth-child(n + 4) { display: none; }
+
+  /* 2. Três frentes: carta da frente menor, sobra espaço para as abas das cartas de trás */
+  .servicos-deck .servicos__grade { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+  .servicos-deck .servicos .fx-palco { padding-top: calc(var(--topo-h) + 40px); padding-bottom: 16px; }
+  .servicos-deck .servico { padding: 22px 30px 24px; }
+  .servicos-deck .servico__icone { width: 30px; height: 30px; }
+  .servicos-deck .servico__titulo { margin-top: 10px; font-size: 1.5rem; }
+  .servicos-deck .servico__lead { margin-top: 6px; font-size: 1rem; }
+  .servicos-deck .servico__lead + p { margin-top: 8px; font-size: 0.875rem; line-height: 1.45; }
+  .servicos-deck .servico__itens { margin: 14px 0 18px; gap: 6px 20px; }
+  .servicos-deck .servico__itens li { font-size: 0.8125rem; }
+  .servicos-deck .servico .btn { padding-block: 10px; font-size: 0.875rem; }
+  .servicos-deck .servico__aba { top: 9px; }
+  .servicos-deck .servicos__titulo { font-size: clamp(2rem, 1rem + 2.6vw, 3.2rem); }
+  .servicos-deck .conexao { margin-top: 24px; }
+
+  /* 3. Resultados: vídeos do tamanho que a altura permite, juntos e centralizados (sem buracos) */
+  .cena-res .reels { grid-template-columns: repeat(4, max-content); justify-content: center; column-gap: clamp(20px, 2.4vw, 36px); }
+  .cena-res .reel { grid-template-rows: auto auto; width: max-content; }
+  .cena-res .reel__midia { height: calc(100svh - 300px); width: auto; }
+  .cena-res .reel__legenda { min-height: 0; width: calc((100svh - 300px) * 9 / 16); }
+  .cena-res .reel__legenda > span { display: none; } /* fica o nome e o "Ver no Instagram" */
+  .cena-res .reel:nth-child(even) { padding-top: 18px; }
+
+  /* 4. Bastidores: texto e etapas à esquerda, vídeo grande à direita */
+  .cena-bast .bastidores__palco {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr); grid-template-rows: auto minmax(0, 1fr);
+    column-gap: clamp(28px, 3vw, 48px); row-gap: 22px; padding-top: calc(var(--topo-h) + 2vh); padding-bottom: 3vh;
+  }
+  .cena-bast .bastidores__cabeca { grid-column: 1; grid-row: 1; grid-template-columns: 1fr; gap: 12px; align-items: start; }
+  .cena-bast .bastidores__titulo { font-size: clamp(1.6rem, 0.6rem + 1.9vw, 2.3rem); }
+  .cena-bast .bastidores__intro { font-size: 0.9375rem; }
+  .cena-bast .bastidores__yt { font-size: 0.875rem; }
+  .cena-bast .bastidores__etapas { grid-column: 1; grid-row: 2; align-self: start; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+  .cena-bast .bastidores__etapas li { padding-top: 8px; font-size: 0.8125rem; }
+  .cena-bast .bastidores__janela { grid-column: 2; grid-row: 1 / -1; }
+
+  /* 5. Projetos: cards mais baixos, centralizados, com respiro antes da próxima seção */
+  .projetos .fx-palco { padding-top: calc(var(--topo-h) + 8px); padding-bottom: 6vh; gap: 18px; }
+  .projetos__titulo { font-size: clamp(2rem, 0.6rem + 3.6vw, 3.6rem); }
+  .projetos__intro { margin-top: 6px; font-size: 0.9375rem; }
+  .projeto { flex-basis: clamp(250px, 24vw, 340px); }
+  .projetos { margin-bottom: 10vh; } /* respiro antes da cena do notebook */
+  .projeto__txt { padding: 14px 18px 16px; gap: 4px; }
+  .projeto__nome { font-size: 1.25rem; }
+  .projeto__txt p:not(.projeto__seg) { font-size: 0.8125rem; line-height: 1.4; }
+}
