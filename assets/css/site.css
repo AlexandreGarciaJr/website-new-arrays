@@ -2287,7 +2287,6 @@ html.lenis, html.lenis:focus-within { scroll-behavior: auto !important; }
   .pilares__grade.tem-zoom .pilar:not(.pilar--zoom) { opacity: 0.32; transform: scale(0.97); filter: saturate(0.4); }
   .pilar--zoom .pilar__txt { max-width: 56ch; }
   /* no tráfego ampliado, os dois prints ficam lado a lado (mais quadrados, mais legíveis) */
-  .pilar--trafego.pilar--zoom .pilar__midia--trafego { grid-template-rows: 1fr; grid-template-columns: 4.6fr 5.6fr; }
   .pilar__midia--trafego { transition: grid-template-columns 0.5s var(--ease-out); }
 }
 
@@ -2399,24 +2398,17 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
   box-shadow: 0 28px 56px -18px rgb(0 0 0 / 0.85);
   transition: top 0.7s var(--ease-out), height 0.7s var(--ease-out), transform 0.7s var(--ease-out), filter 0.5s ease, z-index 0s 0.25s;
 }
-.peca--print.leque__peca { left: 0; top: 18%; height: 82%; aspect-ratio: 640 / 1383; transform: rotate(-5deg); }
-.peca--reel.leque__peca { right: 0; top: 0; height: 90%; aspect-ratio: 9 / 16; transform: rotate(3.5deg); }
+.peca--print.leque__peca { aspect-ratio: 640 / 1383; }
+.peca--reel.leque__peca { aspect-ratio: 9 / 16; }
 /* quem está atrás: um pouco menor e mais escuro; quem está na frente: por cima */
-.leque__peca:not([data-frente]) { z-index: 1; transform: rotate(var(--giro, 0deg)) scale(0.94); filter: brightness(0.55) saturate(0.8); cursor: pointer; }
-.leque__peca[data-frente] { z-index: 2; }
-.peca--print.leque__peca { --giro: -5deg; }
-.peca--reel.leque__peca { --giro: 3.5deg; }
-.leque__peca:not([data-frente]) .peca__selo { opacity: 0; }
 .leque__peca .peca__selo { transition: opacity 0.4s ease; }
-.leque__peca:not([data-frente]):hover { filter: brightness(0.75); }
+
 
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   /* ampliado: Reels + dois posts lado a lado, bem maiores */
   .pilar--zoom .peca__selo { left: 12px; bottom: 12px; font-size: 0.8125rem; }
   .pilar--zoom .peca__selo strong { font-size: 0.9375rem; }
   /* ampliado: o leque abre e as duas peças ficam lado a lado, inteiras */
-  .pilar--zoom .leque__peca { top: 0; height: 100%; transform: none; filter: none; }
-  .pilar--zoom .leque__peca .peca__selo { opacity: 1; }
 }
 
 /* =========================================================
@@ -2642,16 +2634,6 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
    (unidades do contêiner: a altura das peças se ajusta para caberem lado a lado)
    ========================================================= */
 .leque { container-type: size; }
-@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
-  .pilar--zoom .leque {
-    --vao: 18px;
-    --h: min(100cqh, (100cqw - var(--vao)) / (640 / 1383 + 9 / 16));
-    --sobra: calc((100cqw - var(--h) * (640 / 1383 + 9 / 16) - var(--vao)) / 2);
-  }
-  .pilar--zoom .peca--print.leque__peca { left: var(--sobra); top: calc((100cqh - var(--h)) / 2); height: var(--h); }
-  .pilar--zoom .peca--reel.leque__peca { right: var(--sobra); top: calc((100cqh - var(--h)) / 2); height: var(--h); }
-  .leque__peca { transition: top 0.7s var(--ease-out), left 0.7s var(--ease-out), right 0.7s var(--ease-out), height 0.7s var(--ease-out), transform 0.7s var(--ease-out), filter 0.5s ease, z-index 0s 0.25s; }
-}
 
 /* convite para ouvir: aparece quando o navegador bloqueia o som até o primeiro clique */
 .dock--convite .dock__som .dock__rotulo { opacity: 1; transform: translate(0, -50%); background: var(--blue-500); border-color: var(--blue-500); color: var(--bw-900); animation: convite-entra 0.6s var(--ease-out) 1.6s backwards; }
@@ -2857,3 +2839,28 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
   .projeto__nome { font-size: 1.25rem; }
   .projeto__txt p:not(.projeto__seg) { font-size: 0.8125rem; line-height: 1.4; }
 }
+
+/* painel do Meta Ads no card "Tráfego pago" das Três frentes */
+.servico__painel { margin: 0 0 22px; border-radius: 12px; overflow: hidden; border: 1px solid rgb(255 255 255 / 0.1); background: #1e2a33; position: relative; }
+.servico__painel img { display: block; width: 100%; height: auto; max-height: 26vh; object-fit: cover; object-position: top left; }
+.servico__painel figcaption { position: absolute; right: 10px; bottom: 8px; padding: 3px 10px; border-radius: var(--r-pilula); background: rgb(5 12 14 / 0.75); font-size: 0.75rem; color: #fff; }
+@media (min-width: 1024px) and (max-height: 760px) {
+  .servicos-deck .servico__painel { margin-bottom: 14px; }
+  .servicos-deck .servico__painel img { max-height: 17vh; }
+}
+
+/* =========================================================
+   PILAR TRÁFEGO: 2 peças verticais em cima + painel do Meta Ads embaixo
+   ========================================================= */
+.pilar__midia--trafego { display: grid !important; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; }
+.pilar__midia--trafego > .peca { min-height: 0; height: auto; }
+.pilar__midia--trafego > .peca--print img { object-position: 50% 8%; }
+.pilar__midia--trafego > .peca--painel { grid-column: 1 / -1; margin: 0; aspect-ratio: 1640 / 600; background: #1e2a33; }
+.pilar__midia--trafego > .peca--painel img { object-fit: cover; object-position: top left; }
+@media (max-width: 1023px) {
+  .pilar__midia--trafego { height: auto !important; grid-template-rows: auto auto; }
+  .pilar__midia--trafego > .peca--print, .pilar__midia--trafego > .peca--reel { aspect-ratio: 9 / 15; }
+}
+
+/* Três frentes: as três cartas sempre com a mesma altura (a maior define) */
+.servicos-deck .servicos__palco .fx-etapa, .servicos-deck .servicos__palco .fx-etapa:focus-within { align-self: stretch; }

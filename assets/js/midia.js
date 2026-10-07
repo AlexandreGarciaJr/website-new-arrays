@@ -7,7 +7,7 @@
              (ou um clique no vídeo) liga o som de UM vídeo por vez, recomeçando
              do início. Enquanto um vídeo tem som, a música do site abaixa
              (evento "na:video-som", ouvido pelo dock.js).
-   LEQUE     [data-leque] (pilar Tráfego): as duas peças sobrepostas trocam de
+   LEQUE     [data-leque] (pilar Tráfego): as três peças sobrepostas giram de
              lugar sozinhas a cada LEQUE_MS e com um clique na peça de trás.
              Para enquanto o mouse está em cima ou o pilar está ampliado.
    Nada é baixado antes de a página terminar de carregar. Com "reduzir movimento"
@@ -67,31 +67,32 @@
   }
   function galeriaParar(item) { clearInterval(item.t); }
 
-  /* ---------- leque: duas peças sobrepostas que trocam de lugar ---------- */
-  function lequeTrocar(leque) {
-    var pecas = leque.querySelectorAll(".leque__peca");
-    for (var i = 0; i < pecas.length; i++) {
-      if (pecas[i].hasAttribute("data-frente")) pecas[i].removeAttribute("data-frente");
-      else pecas[i].setAttribute("data-frente", "");
+  /* ---------- leque: peças sobrepostas que giram de lugar (data-pos 0 = frente) ---------- */
+  function lequeGirar(leque, vezes) {
+    var pecas = leque.querySelectorAll(".leque__peca"), n = pecas.length;
+    for (var k = 0; k < (vezes || 1); k++) {
+      for (var i = 0; i < n; i++) {
+        var p = parseInt(pecas[i].getAttribute("data-pos"), 10) || 0;
+        pecas[i].setAttribute("data-pos", String((p + n - 1) % n)); // 1 vira frente, a frente vai para o fim da fila
+      }
     }
   }
   function lequeIniciar(item) {
     clearInterval(item.t);
     item.t = setInterval(function () {
-      var pilar = item.el.closest(".pilar");
-      if (item.el.matches(":hover") || (pilar && pilar.classList.contains("pilar--zoom"))) return;
-      lequeTrocar(item.el);
+      if (item.el.matches(":hover")) return; // a pessoa está olhando: não troca
+      lequeGirar(item.el);
     }, MIDIA.LEQUE_MS);
   }
   doc.querySelectorAll("[data-leque]").forEach(function (leque) {
-    // clique na peça de trás: ela vem para a frente (e não abre o link); na da frente, o link funciona normal
+    // clique numa peça de trás: ela vem para a frente (e não abre o link); na da frente, o link funciona normal
     leque.addEventListener("click", function (e) {
       var peca = e.target.closest(".leque__peca");
-      if (!peca || peca.hasAttribute("data-frente")) return;
-      var pilar = leque.closest(".pilar");
-      if (pilar && pilar.classList.contains("pilar--zoom")) return; // ampliado: as duas já estão inteiras
+      if (!peca) return;
+      var pos = parseInt(peca.getAttribute("data-pos"), 10) || 0;
+      if (!pos) return;
       e.preventDefault();
-      lequeTrocar(leque);
+      lequeGirar(leque, pos);
       if (leque._naItem && leque._naItem.ativo) lequeIniciar(leque._naItem); // recomeça a contagem
     });
   });
