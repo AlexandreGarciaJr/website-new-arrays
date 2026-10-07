@@ -344,3 +344,34 @@ Vale para telas com largura a partir de 1024 px e altura até 760 px: `@media (m
 - **Resultados:** os vídeos usam a altura disponível e ficam juntos e centralizados, sem buracos entre as colunas. A descrição some; ficam o nome e o "Ver no Instagram". A fusão com os Bastidores continua alinhada.
 - **Bastidores:** o texto e as etapas (em 2 colunas) vão para a esquerda e o vídeo fica grande à direita.
 - **Projetos:** os cards ficam mais baixos e há um respiro de 10vh antes da cena do notebook.
+
+## 23. Medição (Analytics, Clarity, Pixel) e aviso de cookies
+
+A medição fica em `assets/js/rastreio.js`, incluído nas 3 páginas (início, política de privacidade e 404). Os IDs estão no topo do arquivo:
+
+| Ferramenta | ID |
+|---|---|
+| Google Analytics | G-1KB4Y8LZ67 |
+| Microsoft Clarity | n0mo0i9cs0 |
+| Meta Pixel | 1651943026352024 |
+
+**Quando cada uma carrega**
+
+- Nada carrega antes de o site abrir: tudo entra depois do `load` e do loader, quando o navegador está livre.
+- O Google Analytics roda sempre, em Consent Mode v2: sem aceite ele não grava cookies e envia só contagens anônimas.
+- O Clarity e o Meta Pixel só carregam depois de "Aceitar".
+
+**Aviso de cookies**
+
+- O aviso é um cartão no canto inferior esquerdo, com os colchetes da marca e os botões "Aceitar" e "Só os essenciais".
+- A escolha vale por 6 meses (`localStorage`, chave `na-cookies`).
+- O link "Preferências de cookies" no rodapé, e também na política, reabre o aviso.
+- A política de privacidade ganhou a seção "Cookies e medição" (`#cookies`).
+
+**Eventos**
+
+- `site.js`, `dock.js` e `midia.js` publicam o evento `na:evento`; o `rastreio.js` envia esses eventos ao GA4: `form_start`, `form_step`, `form_error`, `generate_lead`, `contact_whatsapp`, `click_email`, `video_play`, `video_som`, `som_toggle`.
+- No Pixel, o envio do formulário vira `Lead` e o clique no WhatsApp vira `Contact`.
+- Nome, telefone e e-mail nunca são enviados.
+
+**Testes:** os testes em `testes/` respondem vazio para os domínios de medição, para não depender da internet.

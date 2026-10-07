@@ -113,7 +113,9 @@
     reel.querySelector(".reel__som").setAttribute("aria-pressed", "true");
     comSom = reel;
     avisarMusica(true);
-    if (window.dataLayer) window.dataLayer.push({ event: "video_som", video_name: v.getAttribute("aria-label") || "" });
+    var dv = { event: "video_som", video_name: v.getAttribute("aria-label") || "" };
+    if (window.dataLayer) window.dataLayer.push(dv);
+    doc.dispatchEvent(new CustomEvent("na:evento", { detail: dv }));
   }
   function somDesligar(reel, trocando) {
     var v = reel.querySelector("video");

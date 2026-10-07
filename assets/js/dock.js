@@ -26,7 +26,7 @@
   try { localStorage.removeItem(SOM.CHAVE); } catch (e) {}
   function lerPref() { try { return sessionStorage.getItem(SOM.CHAVE) !== "0"; } catch (e) { return true; } }
   function salvarPref(v) { try { sessionStorage.setItem(SOM.CHAVE, v ? "1" : "0"); } catch (e) { /* sem armazenamento: tudo bem */ } }
-  function track(ev, dados) { if (window.dataLayer) window.dataLayer.push(Object.assign({ event: ev }, dados || {})); }
+  function track(ev, dados) { var d = Object.assign({ event: ev }, dados || {}); if (window.dataLayer) window.dataLayer.push(d); document.dispatchEvent(new CustomEvent("na:evento", { detail: d })); }
 
   function criar() {
     if (audio) return audio;

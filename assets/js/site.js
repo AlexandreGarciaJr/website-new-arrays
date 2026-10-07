@@ -26,6 +26,7 @@
       var dados = { event: evento, page_path: location.pathname };
       for (var k in params) if (Object.prototype.hasOwnProperty.call(params, k)) dados[k] = params[k];
       window.dataLayer.push(dados);
+      doc.dispatchEvent(new CustomEvent("na:evento", { detail: dados }));
     } catch (e) { /* analytics nunca quebra a página */ }
   }
 

@@ -1317,6 +1317,8 @@ input, select, textarea { font: inherit; }
 .pagina-simples--texto h2 { margin-top: 40px; font-size: 1.375rem; font-weight: 700; letter-spacing: -0.01em; }
 .pagina-simples--texto h2 + p { margin-top: 10px; }
 .pagina-simples--texto p { max-width: 68ch; color: var(--tinta-suave); line-height: 1.65; }
+.pagina-simples--texto ul { max-width: 68ch; margin: 12px 0 0 1.2em; display: grid; gap: 8px; color: var(--tinta-suave); line-height: 1.6; list-style: disc; }
+.pagina-simples--texto li::marker { color: var(--blue-400); }
 .pagina-simples--texto a { color: var(--blue-200); }
 .pagina-simples__voltar { margin-top: 48px; }
 
@@ -2864,3 +2866,52 @@ a.peca:hover video, a.peca:hover .peca__galeria img { transform: scale(1.03); }
 
 /* Três frentes: as três cartas sempre com a mesma altura (a maior define) */
 .servicos-deck .servicos__palco .fx-etapa, .servicos-deck .servicos__palco .fx-etapa:focus-within { align-self: stretch; }
+
+/* =========================================================
+   AVISO DE COOKIES (assets/js/rastreio.js)
+   Cartão discreto no canto inferior esquerdo, com os colchetes da marca.
+   No celular ocupa a largura, deixando livre a coluna dos botões fixos.
+   ========================================================= */
+.cookies {
+  position: fixed; z-index: 40;
+  left: max(16px, env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(380px, calc(100vw - 32px));
+  padding: 18px 22px 20px;
+  background: rgb(10 18 20 / 0.92);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border: 1px solid rgb(64 173 189 / 0.3);
+  border-radius: var(--r-painel);
+  box-shadow: 0 30px 60px -25px rgb(0 0 0 / 0.9);
+  color: var(--branco);
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.6s var(--ease-out);
+}
+.cookies--on { opacity: 1; transform: none; }
+.cookies::before, .cookies::after {
+  content: ""; position: absolute; top: -1px; bottom: -1px; width: 10px;
+  border: 2px solid var(--blue-400); pointer-events: none;
+}
+.cookies::before { left: -7px; border-right: 0; border-radius: 4px 0 0 4px; }
+.cookies::after { right: -7px; border-left: 0; border-radius: 0 4px 4px 0; }
+.cookies__titulo { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-300); }
+.cookies__titulo span { color: var(--blue-400); }
+.cookies__txt { margin-top: 8px; font-size: 0.875rem; line-height: 1.5; color: var(--tinta-suave); }
+.cookies__txt a { color: var(--blue-200); text-decoration: underline; text-underline-offset: 3px; }
+.cookies__acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.cookies__bt {
+  flex: 1 1 auto; min-height: 44px; padding: 10px 18px;
+  border-radius: var(--r-pilula); border: 1px solid rgb(255 255 255 / 0.25);
+  background: transparent; color: var(--branco); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.cookies__bt:hover { border-color: var(--blue-400); }
+.cookies__bt--sim { background: var(--acao); border-color: var(--acao); color: var(--bw-900); }
+.cookies__bt--sim:hover { background: var(--blue-400); }
+.cookies__bt:focus-visible { outline: 2px solid var(--blue-200); outline-offset: 3px; }
+@media (max-width: 639px) {
+  .cookies { left: 12px; right: 84px; width: auto; bottom: max(12px, env(safe-area-inset-bottom)); padding: 14px 16px 16px; }
+  .cookies__bt { padding-inline: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .cookies { transition: opacity 0.2s ease; transform: none; } }
+/* com o aviso aberto, o convite do som não disputa espaço */
+body:has(.cookies--on) .dock--convite .dock__som .dock__rotulo { opacity: 0; }
