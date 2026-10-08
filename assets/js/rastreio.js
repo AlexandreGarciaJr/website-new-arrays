@@ -1,6 +1,7 @@
 /* =========================================================
    New Arrays | Medição (Google Analytics, Microsoft Clarity, Meta Pixel)
-   + aviso de cookies (LGPD)
+   + aviso de cookies (LGPD): barra fina ao lado dos botões fixos, que só
+     aparece depois que a pessoa sai do topo (nunca tampa o hero)
 
    COMO FUNCIONA
    - Nada carrega antes do site abrir: os scripts entram depois do "load"
@@ -94,16 +95,16 @@
     if (aviso) return aviso;
     aviso = doc.createElement("section");
     aviso.className = "cookies";
-    aviso.setAttribute("role", "dialog");
+    aviso.hidden = true;
     aviso.setAttribute("aria-live", "polite");
     aviso.setAttribute("aria-label", "Aviso de cookies");
     aviso.innerHTML =
-      '<p class="cookies__titulo"><span aria-hidden="true">[</span> cookies <span aria-hidden="true">]</span></p>' +
-      '<p class="cookies__txt">Usamos cookies para medir as visitas e melhorar os nossos anúncios. Você escolhe. ' +
+      '<p class="cookies__titulo" aria-hidden="true"><span>[</span> cookies <span>]</span></p>' +
+      '<p class="cookies__txt">Usamos cookies<span class="cookies__mais"> para medir as visitas e melhorar os anúncios</span>. ' +
       '<a href="' + raiz + 'politica-de-privacidade/#cookies">Saiba mais</a></p>' +
       '<div class="cookies__acoes">' +
       '<button type="button" class="cookies__bt cookies__bt--sim" data-cookies="sim">Aceitar</button>' +
-      '<button type="button" class="cookies__bt" data-cookies="nao">Só os essenciais</button>' +
+      '<button type="button" class="cookies__bt" data-cookies="nao">Recusar</button>' +
       "</div>";
     aviso.addEventListener("click", function (e) {
       var b = e.target.closest("[data-cookies]");
@@ -119,7 +120,8 @@
   function abrirAviso() {
     montarAviso();
     aviso.hidden = false;
-    requestAnimationFrame(function () { aviso.classList.add("cookies--on"); });
+    // dois quadros: o navegador precisa pintar a barra antes de animar a entrada
+    requestAnimationFrame(function () { requestAnimationFrame(function () { aviso.classList.add("cookies--on"); }); });
   }
   function fecharAviso() {
     if (!aviso) return;
@@ -135,12 +137,29 @@
     var bt = aviso.querySelector(".cookies__bt--sim"); if (bt) bt.focus({ preventScroll: true });
   });
 
+  /* ---------- quando mostrar o aviso ----------
+     Nunca por cima do topo (hero): na página inicial a barra só aparece depois que
+     a pessoa rola para fora dele (FORA_DO_TOPO = fração da altura da tela).
+     Nas outras páginas (política, 404) aparece logo. */
+  var FORA_DO_TOPO = 0.75;
+  function mostrarQuandoSairDoTopo() {
+    if (!doc.querySelector(".hero")) { setTimeout(abrirAviso, 1200); return; }
+    var saiu = function () { return (w.scrollY || doc.documentElement.scrollTop) > w.innerHeight * FORA_DO_TOPO; };
+    var checar = function () {
+      if (!saiu()) return;
+      w.removeEventListener("scroll", checar);
+      if (lerEscolha() === null) abrirAviso();
+    };
+    w.addEventListener("scroll", checar, { passive: true });
+    checar(); // a página pode ter aberto já no meio (recarregou ou veio de um link com #)
+  }
+
   /* ---------- liga tudo depois que o site abriu ---------- */
   function iniciar() {
     iniciarGA();
     var escolha = lerEscolha();
     if (escolha === "sim") ligarExtras();
-    else if (escolha === null) setTimeout(abrirAviso, 1200);
+    else if (escolha === null) mostrarQuandoSairDoTopo();
   }
   function depoisDoLoad() {
     // espera o loader (se houver) e um respiro do navegador
