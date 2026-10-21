@@ -39,7 +39,6 @@
     leadEndpoint: "api/lead.php",                 // PHP na HostGator: e-mail (PHPMailer) + planilha (Apps Script)
     verificarEmail: "api/verificar-email.php",    // confere se o domínio do e-mail recebe mensagens (MX)
     whatsapp: "5511995572722",
-    email: "contato@newarrays.com",
     formName: "diagnostico_hero"
   };
   window.dataLayer = window.dataLayer || [];
@@ -59,7 +58,6 @@
       "logo": "https://newarrays.com/assets/img/logo-full-blue.svg",
       "foundingDate": "2022-10",
       "founder": { "@type": "Person", "name": "Daniel Sodré Basilio" },
-      "email": "contato@newarrays.com",
       "telephone": "+55-11-99557-2722",
       "taxID": "54.459.826/0001-42",
       "sameAs": ["https://www.instagram.com/newarrays/"]
@@ -72,7 +70,6 @@
       "image": "https://newarrays.com/assets/img/og-newarrays.png",
       "parentOrganization": { "@id": "https://newarrays.com/#organization" },
       "telephone": "+55-11-99557-2722",
-      "email": "contato@newarrays.com",
       "address": { "@type": "PostalAddress", "addressLocality": "Embu das Artes", "addressRegion": "SP", "addressCountry": "BR" },
       "areaServed": [
         { "@type": "City", "name": "Embu das Artes" },
@@ -286,6 +283,9 @@
         <li><a href="#sobre">Quem somos</a></li>
       </ul>
     </nav>
+    <a class="topo__insta" href="https://www.instagram.com/newarrays/" target="_blank" rel="noopener" data-ig-pos="header" aria-label="Instagram da New Arrays (abre em nova aba)" title="@newarrays no Instagram">
+      <svg aria-hidden="true"><use href="#i-instagram"/></svg>
+    </a>
     <button class="btn btn--primario btn--compacto topo__cta" type="button" data-abrir-form data-cta-pos="header">Quero falar sobre meu projeto</button>
     <button class="topo__menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
       <svg aria-hidden="true"><use href="#i-menu"/></svg>
@@ -1052,8 +1052,7 @@
       <h3>Contato</h3>
       <ul class="rodape__contatos">
         <li><a href="https://wa.me/5511995572722" target="_blank" rel="noopener" data-wa-pos="rodape"><svg aria-hidden="true"><use href="#i-whatsapp"/></svg><span>+55 11 99557-2722</span></a></li>
-        <li><a href="mailto:contato@newarrays.com" data-email-pos="rodape"><svg aria-hidden="true"><use href="#i-mail"/></svg><span>contato@newarrays.com</span></a></li>
-        <li><a href="https://www.instagram.com/newarrays/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg><span>@newarrays</span></a></li>
+        <li><a href="https://www.instagram.com/newarrays/" target="_blank" rel="noopener" data-ig-pos="rodape"><svg aria-hidden="true"><use href="#i-instagram"/></svg><span>@newarrays</span></a></li>
         <li><span class="rodape__local"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>Embu das Artes, SP. Atendimento remoto.</span></span></li>
       </ul>
     </div>
@@ -1065,11 +1064,15 @@
 </footer>
 
 <!-- ============ ATALHOS FIXOS: som + WhatsApp (assets/js/dock.js) ============ -->
-<aside class="dock" aria-label="Atalhos">
+<aside class="dock" aria-label="Atalhos: som, Instagram e WhatsApp">
   <button class="dock__btn dock__som" type="button" aria-pressed="false" data-som="assets/audio/trilha.mp3">
     <span class="dock__ico dock__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     <span class="dock__rotulo" data-som-rotulo>Ligar som</span>
   </button>
+  <a class="dock__btn dock__ig" href="https://www.instagram.com/newarrays/" target="_blank" rel="noopener" data-ig-pos="dock">
+    <svg class="dock__ico" aria-hidden="true"><use href="#i-instagram"/></svg>
+    <span class="dock__rotulo">Instagram @newarrays<span class="sr-only"> (abre em nova aba)</span></span>
+  </a>
   <a class="dock__btn dock__wa" href="https://wa.me/5511995572722?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20New%20Arrays%20e%20quero%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener" data-wa-pos="dock">
     <svg class="dock__ico" aria-hidden="true"><use href="#i-whatsapp"/></svg>
     <span class="dock__rotulo">Conversar no WhatsApp<span class="sr-only"> (abre em nova aba)</span></span>

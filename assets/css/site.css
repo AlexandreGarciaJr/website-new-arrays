@@ -251,12 +251,26 @@ input, select, textarea { font: inherit; }
   cursor: pointer;
 }
 .topo__menu svg { width: 22px; height: 22px; }
+/* Instagram no topo: botão redondo no mesmo estilo do menu */
+.topo__insta {
+  display: inline-flex; flex: none;
+  width: 44px; height: 44px;
+  align-items: center; justify-content: center;
+  border: 1px solid var(--linha-forte);
+  border-radius: var(--r-pilula);
+  color: var(--tinta);
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.topo__insta svg { width: 22px; height: 22px; fill: currentColor; }
+.topo__insta:hover, .topo__insta:focus-visible { color: var(--bw-900); background: var(--blue-500); border-color: var(--blue-500); }
+.topo__insta:focus-visible { outline: 2px solid var(--blue-200); outline-offset: 3px; }
 
 @media (max-width: 1100px) {
   .topo__cta { display: none; }
 }
 @media (max-width: 860px) {
-  .topo__menu { display: inline-flex; }
+  .topo__menu { display: inline-flex; margin-left: -12px; }
+  .topo__insta { margin-left: auto; }
   .topo__nav {
     position: absolute;
     top: var(--topo-h);
@@ -1909,6 +1923,7 @@ html.lenis, html.lenis:focus-within { scroll-behavior: auto !important; }
 .dock__btn:active { transform: scale(0.94); }
 .dock__btn:focus-visible { outline: 2px solid var(--blue-200); outline-offset: 3px; }
 .dock__ico { width: 24px; height: 24px; }
+.dock__btn svg.dock__ico { fill: currentColor; }
 
 /* rótulo que desliza para a esquerda no hover/foco */
 .dock__rotulo {

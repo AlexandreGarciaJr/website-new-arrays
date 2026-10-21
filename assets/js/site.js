@@ -694,6 +694,7 @@
     var a = e.target.closest && e.target.closest("a");
     if (!a) return;
     if (a.hasAttribute("data-wa-pos")) track("contact_whatsapp", { cta_position: a.getAttribute("data-wa-pos"), destination: "whatsapp" });
+    else if (a.hasAttribute("data-ig-pos")) track("click_instagram", { cta_position: a.getAttribute("data-ig-pos") });
     else if (a.href && a.href.indexOf("mailto:") === 0) track("click_email", { cta_position: a.getAttribute("data-email-pos") || "" });
   });
 
